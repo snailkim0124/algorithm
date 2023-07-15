@@ -14,18 +14,12 @@ int main() {
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> n;
-	int ans = 666;
-	n -= 1;
+	int i = 666;
 	while (1) {
+		if (to_string(i).find("666") != string::npos) n--;
 		if (n == 0) break;
-		ans++;
-		for (int i = 0; i < 10; i++) {
-			if (ans / (int)pow(10, i) % 1000 == 666) {
-				n--;
-				break;
-			}
-		}
+		i++;
 	}
-	cout << ans;
+	cout << i << "\n";
 	return 0;
 }
