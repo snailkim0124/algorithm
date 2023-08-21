@@ -24,11 +24,6 @@ int main() {
 	int sum = a[0];
 
 	while (left <= right && right < n) {
-		if (a[left] == s || a[right] == s) {
-			cout << "1";
-			exit(0);
-		}
-
 		if (sum >= s) {
 			if (right - left + 1 < MIN) {
 				MIN = right - left +1;
