@@ -13,7 +13,7 @@ int a[100005];
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
-	
+
 	cin >> n;
 	for (int i = 0; i < n; i++) {
 		cin >> a[i];
@@ -25,30 +25,20 @@ int main() {
 	int right = n - 1;
 
 	while (left < right) {
-		if (a[left] + a[right] == 0) {
-			x = a[right];
-			y = a[left];
-			cout << a[left] << " " << a[right];
-			exit(0);
+		int sum = a[left] + a[right];
+
+		if (MIN > abs(sum)) {
+			MIN = abs(sum);
+			x = a[left];
+			y = a[right];
+
+			if (sum == 0) break;
 		}
-		else if (a[left] + a[right] < 0) {
-			if (abs(a[left] + a[right]) < MIN) {
-				MIN = abs(a[left] + a[right]);
-				x = a[right];
-				y = a[left];
-			}
-			left++;
-		}
-		else {
-			if (abs(a[left] + a[right]) < MIN) {
-				MIN = abs(a[left] + a[right]);
-				x = a[right];
-				y = a[left];
-			}
-			right--;
-		}
+
+		if (sum < 0) left++;
+		else right--;
 	}
-	cout << y << " " << x;
+	cout << x << " " << y;
 
 
 	return 0;
