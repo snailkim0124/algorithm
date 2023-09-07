@@ -9,19 +9,29 @@ using namespace std;
 typedef long long ll;
 ll n;
 double grade;
+priority_queue<double> pq;
 vector<double> v;
+
 int main() {
 	scanf("%lld", &n);
 
 	for (int i = 0; i < n; i++) {
 		scanf("%lf", &grade);
-		v.push_back(grade);
+		if (pq.size() == 7) {
+			pq.push(grade);
+			pq.pop();
+		}
+		else pq.push(grade);
 	}
 
-	sort(v.begin(), v.end());
+	while (!pq.empty()) {
+		v.push_back(pq.top());
+		pq.pop();
+	}
+	reverse(v.begin(), v.end());
 
-	for (int i = 0; i < 7; i++) {
-		printf("%.3lf\n", v[i]);
+	for (auto it : v) {
+		printf("%.3lf\n", it);
 	}
 	return 0;
 }
