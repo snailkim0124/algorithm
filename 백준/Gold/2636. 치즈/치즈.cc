@@ -15,23 +15,45 @@ int visited[105][105];
 int dy[4] = { -1,0,1,0 };
 int dx[4] = { 0,1,0,-1 };
 vector<pair<int, int>> v;
-int res, cnt;
+int res, Time;
 
-void dfs(int y, int x) {
-	visited[y][x] = 1;
-	if (arr[y][x] == 1) { // 치즈 확인
-		v.push_back({ y,x });
-		return;
-	}
-	for (int i = 0; i < 4; i++) {
-		int ny = y + dy[i];
-		int nx = x + dx[i];
-		if (nx < 0 || ny < 0 || nx >= m || ny >= n)continue;
-		if (visited[ny][nx]) continue;
-		dfs(ny, nx);
+int bfs() { 
+	int cnt = 0;
+	visited[0][0] = 1;
+	queue<pair<int, int>> q;
+	q.push({ 0,0 });
+	Time++;
+
+	while (!q.empty()) { // bfs 방법
+		int y = q.front().first;
+		int x = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int ny = y + dy[i];
+			int nx = x + dx[i];
+			if (nx < 0 || ny < 0 || nx >= m || ny >= n) continue;
+			if (visited[ny][nx]) continue;
+			if (arr[ny][nx] == 0) { // 치즈가 없을 때
+				q.push({ ny, nx });
+			}
+			else { // 치즈가 있을 때
+				arr[ny][nx] = 0; //치즈 녹이기
+				cnt++;
+			}
+			visited[ny][nx] = 1;
+		}
 	}
 
-	return;
+	if (cnt == 0) { // 치즈 개수 없으면 결과값 출력
+		Time--;
+		cout << Time << "\n" << res;
+		return 1;
+	}
+	else {
+		res = cnt; // 치즈 개수
+		return 0;
+	}
 }
 
 int main() {
@@ -46,26 +68,9 @@ int main() {
 	}
 
 	while (1) {
-		cnt = 0;
-		fill(&visited[0][0], &visited[0][0] + 105 * 105, 0);
-		bool check = false;
-		v.clear(); // 초기화
-
-		dfs(0, 0);
-		for (int i = 0; i < v.size(); i++) {
-			cnt++;
-			arr[v[i].first][v[i].second] = 0; // 치즈 녹이기
-		}
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				if (arr[i][j] != 0) check = true;
-			}
-		}
-		res++;
-		if (check == false) break; // 치즈 남은 여부
-
+		if (bfs()) break; // 치즈가 다 없을 때
+		fill(&visited[0][0], &visited[0][0] + 105 * 105, 0); //초기화
 	}
 
-	cout << res << "\n" << cnt;
 	return 0;
 }
