@@ -31,13 +31,8 @@ int main() {
 	res += v[0].first + v[0].second;
 
 	for (int i = 1; i < n; i++) {
-		if (res <= v[i].first) {
-			res += v[i].first - res;
-			res += v[i].second;
-		}
-		else {
-			res += v[i].second;
-		}
+		res = max(res, v[i].first);
+		res += v[i].second;
 	}
 
 	cout << res;
