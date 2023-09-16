@@ -8,9 +8,10 @@
 
 using namespace std;
 
-int n, num=1;
-int cnt;
-int prime[4000005];
+int n, num;
+int cnt, sum;
+int prime[4000005]; // 소수 인지 아닌지
+int a[4000005]; // 소수 집합
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -18,47 +19,34 @@ int main() {
 
 	cin >> n;
 
-	prime[0] = 2;
-
-	for (int i = 3; i <= n; i++) {
-		bool flag = true;
-		for (int j = 2; j * j <= i; j++) {
-			if (i % j == 0) {
-				flag = false;
-				break;
-			}
+	for (int i = 2; i <= n; i++) {
+		if (prime[i]) continue;
+		for (int j = 2 * i; j <= n; j += i) {
+			prime[j] = 1; // 에라토스테네스의 체
 		}
-		if (flag == true) {
-			prime[num] = i;
+	}
+
+	for (int i = 2; i <= n; i++) { 
+		if (!prime[i]) { // 소수이면
+			a[num] = i;
 			num++;
 		}
 	}
 
-	int sum = prime[0];
 	int left = 0;
 	int right = 0;
-	
-	while (left <= right && right < num) {
-		if (sum < n) {
-			right++;
-			sum += prime[right];
-		}
-
-		else if (sum == n) {
-			cnt++;
-			right++;
-			sum += prime[right];
-		}
-
-		else {
-			sum -= prime[left];
+	while (1) {
+		if (sum >= n) {
+			sum -= a[left];
 			left++;
-
-			if (left > right) {
-				right = left;
-				sum = prime[right];
-			}
 		}
+		else if (right == num) break;
+		else {
+			sum += a[right];
+			right++;
+		}
+
+		if (sum == n) cnt++;
 	}
 
 	cout << cnt;
