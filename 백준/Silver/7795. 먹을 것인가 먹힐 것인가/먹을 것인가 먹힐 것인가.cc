@@ -33,16 +33,22 @@ int main() {
 		}
 		sort(a, a + n);
 		sort(b, b + m);
-		int left = 0;
-		int right = 0;
-		int cnt = 0;
+
+		int res = 0;
 		for (int i = 0; i < n; i++) {
-			for (int j = 0 ; j < m; j++) {
-				if (a[i] > b[j]) cnt++;
-				else break;
+			int left = 0;
+			int right = m - 1;
+			while (left <= right) {
+				int mid = (left + right) / 2;
+				if (a[i] > b[mid]) {
+					left = mid + 1;
+				}
+				else right = mid - 1;
 			}
+			res += left;
 		}
-		cout << cnt << "\n";
+		
+		cout << res << "\n";
 
 	}
 	return 0;
