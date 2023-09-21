@@ -36,20 +36,11 @@ int main() {
 
 		int res = 0;
 		for (int i = 0; i < n; i++) {
-			int left = 0;
-			int right = m - 1;
-			while (left <= right) {
-				int mid = (left + right) / 2;
-				if (a[i] > b[mid]) {
-					left = mid + 1;
-				}
-				else right = mid - 1;
-			}
-			res += left;
+			auto pos = lower_bound(b, b + m, a[i]); // lower_bound 사용
+			res += (int)(pos - &b[0]); // 주소로 빼주기
 		}
-		
-		cout << res << "\n";
 
+		cout << res << "\n";
 	}
 	return 0;
 }
