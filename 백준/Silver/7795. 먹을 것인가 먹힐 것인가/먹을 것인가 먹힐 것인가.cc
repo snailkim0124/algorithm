@@ -33,14 +33,17 @@ int main() {
 		}
 		sort(a, a + n);
 		sort(b, b + m);
-
-		int res = 0;
+		int left = 0;
+		int right = 0;
+		int cnt = 0;
 		for (int i = 0; i < n; i++) {
-			auto pos = lower_bound(b, b + m, a[i]); // lower_bound 사용
-			res += (int)(pos - &b[0]); // 주소로 빼주기
+			for (int j = 0 ; j < m; j++) {
+				if (a[i] > b[j]) cnt++;
+				else break;
+			}
 		}
+		cout << cnt << "\n";
 
-		cout << res << "\n";
 	}
 	return 0;
 }
