@@ -1,30 +1,28 @@
-#include <iostream>
-#include <utility>
-#include <vector>
-#include <algorithm>
-#include <queue>
+#include <bits/stdc++.h>
 
 using namespace std;
+typedef long long ll;
+
 int n, k;
-int a[10005];
 int dp[10005];
+const int INF = 987654321;
+
 int main() {
-	ios::sync_with_stdio(false);
+	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> n >> k;
-	for (int i = 0; i < n; i++) {
-		cin >> a[i];
-	}
-
 	dp[0] = 1;
-	for (int i = 0; i < n; i++) {
-		for (int j = a[i]; j <= k; j++) {
-			dp[j] += dp[j - a[i]];
+
+	for (int i = 1; i <= n; i++) {
+		int money;
+		cin >> money;
+		for (int j = money; j <= k; j++) {
+			dp[j] += dp[j - money];
 		}
 	}
 
 	cout << dp[k];
-	
+
 	return 0;
 }
