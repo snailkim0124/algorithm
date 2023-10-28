@@ -10,8 +10,8 @@ int ans;
 
 int bfs() {
 	queue<pair<pair<int, int>, int>> q; // { {x, y}, 벽부순횟수}
-	visited[0][0][0] = 1;
-	q.push({ { 0, 0 }, 1 });
+	visited[1][1][0] = 1;
+	q.push({ { 1, 1 }, 1 });
 
 	while (!q.empty()) {
 		int x = q.front().first.first;
@@ -19,14 +19,14 @@ int bfs() {
 		int wall = q.front().second;
 		q.pop();
 
-		if (x == n - 1 && y == m - 1) {
-			return visited[x][y][wall]+1;
+		if (x == n && y == m) {
+			return visited[x][y][wall] + 1;
 		}
 
 		for (int i = 0; i < 4; i++) {
 			int nx = x + dx[i];
 			int ny = y + dy[i];
-			if (nx < 0 || ny < 0 || nx >= n || ny >= m) continue;
+			if (nx < 1 || ny < 1 || nx >= n + 1 || ny >= m + 1) continue;
 
 			if (arr[nx][ny] == 1 && wall) {
 				visited[nx][ny][wall - 1] = visited[x][y][wall] + 1;
@@ -48,8 +48,8 @@ int main() {
 	//cin.tie(NULL); cout.tie(NULL);
 
 	scanf("%d %d", &n, &m);
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
 			scanf("%1d", &arr[i][j]);
 		}
 	}
