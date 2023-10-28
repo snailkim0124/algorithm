@@ -11,7 +11,7 @@ int ans;
 int bfs() {
 	queue<pair<pair<int, int>, int>> q; // { {x, y}, 벽부순횟수}
 	visited[1][1][0] = 1;
-	q.push({ { 1, 1 }, 1 });
+	q.push({ { 1, 1 }, 0 });
 
 	while (!q.empty()) {
 		int x = q.front().first.first;
@@ -20,7 +20,7 @@ int bfs() {
 		q.pop();
 
 		if (x == n && y == m) {
-			return visited[x][y][wall] + 1;
+			return visited[x][y][wall];
 		}
 		for (int i = 0; i < 4; i++) {
 			int nx = x + dx[i];
@@ -30,7 +30,7 @@ int bfs() {
 				visited[nx][ny][wall] = visited[x][y][wall] + 1;
 				q.push({ { nx, ny }, wall });
 			}
-			else if (arr[nx][ny] == 1 && wall <= k) {
+			else if (arr[nx][ny] == 1 && wall + 1 <= k) {
 				if (visited[nx][ny][wall + 1]) continue;
 				visited[nx][ny][wall + 1] = visited[x][y][wall] + 1;
 				q.push({ { nx, ny }, wall + 1 });
