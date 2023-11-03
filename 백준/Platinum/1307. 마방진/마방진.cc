@@ -140,46 +140,23 @@ void even_num(int n, int(&arr)[305][305]) {
 }
 
 void four_num(int n, int(&arr)[305][305]) {
-	bool cross[305 + 1][305 + 1] = { false };
-	int k = n / 4;
-	rep(i, n) {
-		rep(j, n) {
-			if ((0 <= i && i <= k - 1 && 0 <= j && j <= k - 1)
-				|| (0 <= i && i <= k - 1 && 3 * k <= j)
-				|| (3 * k <= i && 0 <= j && j <= k - 1)
-				|| (3 * k <= i && 3 * k <= j))
-				cross[i][j] = true;
-			if (k <= i && i <= 3 * k - 1 && k <= j && j <= 3 * k - 1)
-				cross[i][j] = true;
+	int cnt = 1;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			arr[i][j] = cnt;
+			cnt++;
 		}
-	}
-	bool num[305 * 305 + 2] = { false };
-	rep(i, n) {
-		rep(j, n) {
-			if (cross[i][j]) {
-				arr[i][j] = n * i + j + 1;
-				num[n * i + j + 1] = true;
-			}
-		}
-	}
-	int tmp;
-	rrep(i, 1, 305 * 305 + 2) { //시작할수를 찾음
-		tmp = i;
-		if (!num[i])
-			break;
 	}
 
-	_rrep(i, n - 1, 0) {
-		_rrep(j, n - 1, 0) {
-			if (!cross[i][j]) { //대각선이 아닌곳
-				arr[i][j] = tmp;
-				num[tmp] = true;
-				rrep(i, tmp + 1, 305 * 305 + 2) { //다음 k수를 찾음
-					tmp++;
-					if (!num[i])
-						break;
-				}
-			}
+	for (int i = 0; i < n / 4; i++) {
+		int col1 = n / 4;
+		int col2 = n - n / 4 - 1;
+		for (int j = 0; j < n / 2; j++) {
+			swap(arr[i][col1], arr[n - 1 - i][col2]);
+			swap(arr[col1][i], arr[col2][n - 1 - i]);
+			col1++;
+			col2--;
 		}
 	}
 }
