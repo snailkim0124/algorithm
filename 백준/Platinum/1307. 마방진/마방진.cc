@@ -17,62 +17,32 @@ void print_arr(int n, int arr[][305]) {
 	}
 }
 
-void odd_num(int n, int(&arr)[305][305]) {
-	int x, y; //이전 숫자 위치
-	rrep(i, 1, n * n + 1) {
-		if (i == 1) { //1. 정사각형 맨 아랫줄 가운데에 숫자1 기록
-			arr[n - 1][n / 2] = 1;
-			x = n - 1;
-			y = n / 2;
-			continue;
+void odd_num(int n, int arr[305][305]) {
+	int cnt = 1;
+	int x1 = n / 2;
+	int y1 = 0;
+	int x2 = 0, y2 = 0;
+
+	for (int i = 0; i < n * n; i++) {
+		arr[y1][x1] = cnt;
+
+		y2 = y1 - 1;
+		x2 = x1 + 1;
+
+		if (y2 <= -1) y2 = n - 1;
+		if (x2 >= n) x2 = 0;
+		if (arr[y2][x2]) {
+			y2 = y1 + 1;
+			x2 = x1;
 		}
 
-		//이전숫자 오른쪽 아래칸이 맵밖인가?
-		if (x + 1 >= n || y + 1 >= n) { //2. 맵 밖일때
-			//2-1. 수평(좌)으로 이동하여 기록되지 않은 빈칸에 다음 숫자를 기록
-			if (x + 1 < n) {
-				rep(j, n) {
-					if (arr[x + 1][j] == 0) {
-						arr[x + 1][j] = i;
-						x = x + 1;
-						y = j;
-						break;
-					}
-				}
-			}
-			else if (y + 1 < n) { //2-2. 수직(상)으로 이동하여 기록되지 않은 빈칸에 숫자를 기록
-				rep(j, n) {
-					if (arr[j][y + 1] == 0) {
-						arr[j][y + 1] = i;
-						x = j;
-						y = y + 1;
-						break;
-					}
-				}
-			}
-			else { //2-3. 수평, 수직으로 이동불가능하면 이전숫자의 윗칸에 다음숫자를 기록
-				arr[x - 1][y] = i;
-				x = x - 1;
-				y = y;
-			}
-
-		}
-		else { //맵 안일때
-			if (arr[x + 1][y + 1] == 0) { //3. 오른쪽 아래칸이 비어있으면 다음숫자를 기록
-				arr[x + 1][y + 1] = i;
-				x = x + 1;
-				y = y + 1;
-			}
-			else { //4. 오른쪽 아래칸이 채워져있는 경우 이전숫자의 윗칸에 다음숫자를 기록
-				arr[x - 1][y] = i;
-				x = x - 1;
-				y = y;
-			}
-		}
+		x1 = x2;
+		y1 = y2;
+		cnt++;
 	}
 }
 
-void even_num(int n, int(&arr)[305][305]) {
+void even_num(int n, int arr[305][305]) {
 
 	int sub[305][305] = { 0 };
 	int k = n / 2;
@@ -139,7 +109,7 @@ void even_num(int n, int(&arr)[305][305]) {
 	}
 }
 
-void four_num(int n, int(&arr)[305][305]) {
+void four_num(int n, int arr[305][305]) {
 	int cnt = 1;
 
 	for (int i = 0; i < n; i++) {
