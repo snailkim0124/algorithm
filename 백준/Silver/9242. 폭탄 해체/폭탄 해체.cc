@@ -96,7 +96,6 @@ int main() {
 		getline(cin, s[i]);
 	}
 	int size = s[0].size();
-	// cout << "size : " << size;
 	if ((size + 1) % 4 != 0) {
 		cout << "BOOM!!";
 		exit(0);
@@ -123,20 +122,7 @@ int main() {
 			cout << "BOOM!!";
 			exit(0);
 		}
-		//cout << "size : " << size << "j : " << j << "\n";
 	}
-
-	/*for (int i = 0; i < 11; i++) {
-		for (int j = 0; j < 5; j++) {
-			for (int k = 0; k < 3; k++) {
-				cout << num[i][j][k];
-			}
-			cout << "\n";
-		}
-		cout << "\n";
-	}*/
-
-	//cout << real_num << "\n";
 
 	if (stoi(real_num) % 6 == 0) {
 		cout << "BEER!!";
