@@ -27,8 +27,8 @@ int main() {
 				sum += st.top().second;
 				st.pop();
 			}
-			if (sum) st.push({ max(0LL, mx - b), sum });
-			if (!st.empty()) mx = st.top().first;
+			st.push({ max(0LL, mx - b), sum });
+			mx = st.top().first;
 		}
 	}
 
