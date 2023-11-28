@@ -3,16 +3,16 @@
 using namespace std;
 typedef long long ll;
 
-typedef struct LIST {
+typedef struct EDGE {
 	int s, e, v;
-	bool operator > (const LIST& temp) const {
+	bool operator > (const EDGE& temp) const {
 		return v > temp.v;
 	}
-}LIST;
+}EDGE;
 
 int n, m;
 int parent[100005];
-priority_queue<LIST, vector<LIST>, greater<LIST>> pq; // 오름차순
+priority_queue<EDGE, vector<EDGE>, greater<EDGE>> pq; // 오름차순
 
 
 int findParent(int a) {
@@ -52,7 +52,7 @@ int main() {
 	int res = 0;
 
 	while (useEdge < n - 1) {
-		LIST now = pq.top();
+		EDGE now = pq.top();
 		pq.pop();
 
 		if (findParent(now.s) != findParent(now.e)) { // 연결핻도 사이클이 생기지 않는다면
