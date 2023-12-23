@@ -5,6 +5,7 @@ typedef long long ll;
 
 string s;
 int zero, one;
+int cntz, cnto;
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -20,12 +21,22 @@ int main() {
 		}
 	}
 
-	for (int i = 0; i < zero / 2; i++) {
-		cout << 0;
+	cntz = zero;
+	cnto = one;
+
+	for (int i = 0; i < s.size(); i++) {
+		if (cntz != zero / 2) {
+			s.erase(s.rfind('0'), 1);
+			cntz--;
+		}
+		if (cnto != one / 2) {
+			s.erase(s.find('1'), 1);
+			cnto--;
+		}
+		
 	}
-	for (int i = 0; i < one / 2; i++) {
-		cout << 1;
-	}
+
+	cout << s;
 
 	return 0;
 }
