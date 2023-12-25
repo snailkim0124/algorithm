@@ -23,6 +23,7 @@ void dfs(int here) {
 		}
 		else if (graph[here] == graph[there]) { // 탐색하다가 발견한 경우
 			check = false;
+			return;
 		}
 	}
 }
