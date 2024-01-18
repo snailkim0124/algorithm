@@ -57,7 +57,7 @@ int main() {
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> n;
-	cout << ((fibo(n + 1) * fibo(n)) % mod + mod) % mod;
+	cout << fibo(n + 1) * fibo(n) % mod;
 
 	return 0;
 }
