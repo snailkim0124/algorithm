@@ -43,11 +43,6 @@ int main() {
 		p += num;
 	}
 
-	if (s.size() == 1 && s == p) {
-		cout << "1/1";
-		exit(0);
-	}
-	
 	s += s; // 연속으로 다음거
 	s.pop_back(); // 중복방지
 
