@@ -31,12 +31,11 @@ int main() {
 		while (j > 0 && t[i] != p[j]) j = f[j - 1];
 		if (t[i] == p[j]) j++;
 		if (j == p.size()) {
-			cnt++;
 			v.push_back(i - (p.size() - 2));
 		}
 	}
 
-	cout << cnt << "\n";
+	cout << v.size() << "\n";
 	for (auto it : v) {
 		cout << it << " ";
 	}
