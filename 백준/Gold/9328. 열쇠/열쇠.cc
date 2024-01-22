@@ -35,42 +35,8 @@ int main() {
 		if (s != "0") {
 			for (int i = 0; i < s.size(); i++) {
 				key[s[i] - 'a']++;
-				// cout << "key : " << s[i] << "\n";
 			}
 		}
-
-		/*cout << "key : ";
-		for (int i = 0; i < 26; i++) {
-			if (key[i]) cout << (char)(i + 'A') << " ";
-		}
-		cout << "\n";*/
-		
-		//for (int i = 0; i < h; i++) {
-		//	for (int j = 0; j < w; j++) {
-		//		// 시작 위치 넣기
-		//		if (i == 0 || i == h - 1 || j == 0 || j == w - 1) { // 가장자리
-		//			if (arr[i][j] != '*') {
-		//				if (isupper(arr[i][j])) {
-		//					if (key[arr[i][j] - 'A']){
-		//						q.push({ i, j });
-		//						visited[i][j] = 1;
-		//					}
-		//				}
-		//				else {
-		//					q.push({ i, j });
-		//					visited[i][j] = 1;
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-
-		/*while (!q.empty()) {
-			int y, x;
-			tie(y, x) = q.front();
-			q.pop();
-			cout << "start : " << y << " : " << x <<  " : " << arr[y][x] << "\n";
-		}*/
 
 		queue<pair<int, int>> q;
 		queue<pair<int, int>> door[27];
@@ -117,7 +83,6 @@ int main() {
 			}
 		}
 		
-
 		cout << cnt << "\n";
 
 	}
