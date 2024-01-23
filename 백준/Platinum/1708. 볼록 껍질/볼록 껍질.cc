@@ -47,11 +47,10 @@ int main() {
 
 	for (int i = 1; i < n; i++) {
 		if (v[i].second < v[0].second || (v[i].second == v[0].second && v[i].first < v[0].first)) {
-			swap(v[0].first, v[i].first);
-			swap(v[0].second, v[i].second);
+			swap(v[0], v[i]);
 		}
 	}
-	
+
 	sort(v.begin() + 1, v.end(), cmp);
 
 	st.push(v[0]);
