@@ -5,6 +5,35 @@ typedef long long ll;
 
 int t;
 int n;
+const int ROOT = 1;
+int unused = 2;
+const int MX = 10000 * 10 + 5;
+bool check[MX];
+int nxt[MX][26];
+
+void init() {
+	fill(&nxt[0][0], &nxt[0][0] + MX * 26, -1);
+	memset(check, 0, sizeof(check));
+	unused = ROOT + 1;
+}
+
+int c2i(char c) {
+	return c - 'A';
+}
+
+int insert(string& s) {
+	int cur = ROOT;
+	for (auto c : s) {
+		if (nxt[cur][c2i(c)] == -1) {
+			nxt[cur][c2i(c)] = unused++;
+		}
+		cur = nxt[cur][c2i(c)];
+		if (check[cur]) return 0;
+	}
+	if (cur != unused - 1) return 0;
+	return check[cur] = true;
+}
+
 
 int main() {
 	ios_base::sync_with_stdio(false);
@@ -12,9 +41,9 @@ int main() {
 
 	cin >> t;
 	while (t--) {
+		init();
 		bool check = false;
 		cin >> n;
-		multiset<string> mt;
 		vector<string> v(n);
 		for (int i = 0; i < n; i++) {
 			cin >> v[i];
@@ -22,17 +51,11 @@ int main() {
 		sort(v.begin(), v.end());
 
 		for (int i = 0; i < n; i++) {
-			string tmp;
-			for (int j = 0; j < v[i].size(); j++) {
-				tmp += v[i][j];
-				// 접두어를 못찾은 경우
-				if (mt.find(tmp) != mt.end()) {
-					check = true;
-					break;
-				}
+			// 접두어를 못찾은 경우
+			if (!insert(v[i])) {
+				check = true;
+				break;
 			}
-			if (check) break;
-			mt.insert(v[i]);
 		}
 
 		if (!check) cout << "YES\n";
