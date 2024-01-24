@@ -44,17 +44,13 @@ int main() {
 		init();
 		bool check = false;
 		cin >> n;
-		vector<string> v(n);
-		for (int i = 0; i < n; i++) {
-			cin >> v[i];
-		}
-		// sort(v.begin(), v.end());
 
 		for (int i = 0; i < n; i++) {
+			string s;
+			cin >> s;
 			// 접두어를 못찾은 경우
-			if (!insert(v[i])) {
+			if (!insert(s)) {
 				check = true;
-				break;
 			}
 		}
 
