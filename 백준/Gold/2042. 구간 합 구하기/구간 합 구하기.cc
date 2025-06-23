@@ -1,79 +1,64 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
 
-ll n, m, k;
-vector<ll> tree;
-
-ll sum(ll s, ll e) {
-	ll res = 0;
-
-	while (s <= e) {
-		if (s % 2 == 1) {
-			res += tree[s];
-			s++;
-		}
-		if (e % 2 == 0) {
-			res += tree[e];
-			e--;
-		}
-		s /= 2;
-		e /= 2;
+ll init(vector<ll>& v, vector<ll>& tree, int node, int s, int e) {
+	if (s == e) return tree[node] = v[s];
+	else {
+		return tree[node] = init(v, tree, node * 2, s, (s + e) / 2) + init(v, tree, node * 2 + 1, (s + e) / 2 + 1, e);
 	}
-
-	return res;
 }
 
-void change(ll idx, ll val) {
-	ll diff = val - tree[idx];
-
-	while (idx > 0) {
-		tree[idx] += diff;
-		idx /= 2;
+void update(vector<ll>& tree, int node, int s, int e, int idx, ll diff) {
+	if (idx < s || idx > e) return;
+	tree[node] += diff;
+	if (s != e) {
+		update(tree, node * 2, s, (s + e) / 2, idx, diff);
+		update(tree, node * 2 + 1, (s + e) / 2 + 1, e, idx, diff);
 	}
+}
+
+ll sum(vector<ll>& tree, int node, int s, int e, int l, int r) {
+	if (l > e || r < s) return 0;
+	if (l <= s && e <= r) {
+		return tree[node];
+	}
+	return sum(tree, node * 2, s, (s + e) / 2, l, r) + sum(tree, node * 2 + 1, (s + e) / 2 + 1, e, l, r);
 }
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
+	int n, m, k;
 	cin >> n >> m >> k;
-	ll treeheight = 0;
-	ll length = n;
+	vector<ll> v(n);
+	int h = (int)ceil(log2(n));
+	int tree_size = (1 << (h + 1));
+	vector<ll> tree(tree_size);
+	m += k;
 
-	while (length != 0) {
-		length /= 2;
-		treeheight++;
+	for (int i = 0; i < n; i++) {
+		cin >> v[i];
 	}
 
-	ll treesize = ll(pow(2, treeheight + 1));
-	ll leftnodestartindex = treesize / 2 - 1;
-	tree.resize(treesize + 1);
-
-	for (int i = leftnodestartindex + 1; i <= leftnodestartindex + n; i++) {
-		cin >> tree[i];
-	}
-
-	ll i = treesize - 1;
-	while (i != 1) { // tree 만들기
-		tree[i / 2] += tree[i];
-		i--;
-	}
-
-	for (int i = 0; i < m + k; i++) {
+	init(v, tree, 1, 0, n - 1);
+	while (m--) {
 		ll a, b, c;
 		cin >> a >> b >> c;
-
-		if (a == 1) { // b -> c로 바꾸기
-			change(leftnodestartindex + b, c);
+		if (a == 1) {
+			ll diff = c - v[b - 1];
+			v[b - 1] = c;
+			update(tree, 1, 0, n - 1, b - 1, diff);
 		}
-		else if (a == 2) { // 합 출력
-			b += leftnodestartindex;
-			c += leftnodestartindex;
-			cout << sum(b, c) << "\n";
+		else if (a == 2) {
+			cout << sum(tree, 1, 0, n - 1, b - 1, c - 1) << "\n";
 		}
 	}
+	
 
 	return 0;
 }
