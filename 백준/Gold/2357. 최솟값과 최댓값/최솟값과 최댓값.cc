@@ -1,96 +1,61 @@
 #include <bits/stdc++.h>
-
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef pair<ll, ll> pll;
 
-ll n, m, k;
-vector<ll> mintree;
-vector<ll> maxtree;
-const ll INF = 1e18;
+ll arr[100005];
+vector<ll> min_tree, max_tree;
 
-ll treemax(ll s, ll e) {
-	ll res = -1;
-	while (s <= e) {
-		if (s % 2 == 1) {
-			res = max(res, maxtree[s]);
-			s++;
-		}
-		if (e % 2 == 0) {
-			res = max(res, maxtree[e]);
-			e--;
-		}
-		s /= 2;
-		e /= 2;
+void init(int node, int s, int e) {
+	if (s == e) {
+		min_tree[node] = max_tree[node] = arr[s]; 
 	}
-
-	return res;
+	else {
+		init(node * 2, s, (s + e) / 2);
+		init(node * 2 + 1, (s + e) / 2 + 1, e);
+		max_tree[node] = max(max_tree[node * 2], max_tree[node * 2 + 1]);
+		min_tree[node] = min(min_tree[node * 2], min_tree[node * 2 + 1]);
+	}
 }
 
-ll treemin(ll s, ll e) {
-	ll res = INF;
-
-	while (s <= e) {
-		if (s % 2 == 1) {
-			res = min(res, mintree[s]);
-			s++;
-		}
-		if (e % 2 == 0) {
-			res = min(res, mintree[e]);
-			e--;
-		}
-		s /= 2;
-		e /= 2;
+pll query(int node, int s, int e, int l, int r) {
+	if (l > e || r < s) {
+		return make_pair(INT_MAX, 0);
+	}
+	if (l <= s && e <= r) {
+		return make_pair(min_tree[node], max_tree[node]);
 	}
 
-	return res;
+	pll lp = query(node * 2, s, (s + e) / 2, l, r);
+	pll rp = query(node * 2 + 1, (s + e) / 2 + 1, e, l, r);
+	return make_pair(min(lp.first, rp.first), max(lp.second, rp.second));
 }
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
+	int n, m;
 	cin >> n >> m;
-	ll treeheight = 0;
-	ll length = n;
+	int h = (int)ceil(log2(n));
+	int tree_size = (1 << (h + 1));
+	min_tree.resize(tree_size);
+	max_tree.resize(tree_size);
 
-	while (length != 0) {
-		length /= 2;
-		treeheight++;
+	for (int i = 1; i <= n; i++) {
+		cin >> arr[i];
 	}
 
-	ll treesize = ll(pow(2, treeheight + 1));
-	ll leftnodestartindex = treesize / 2 - 1;
-	mintree.resize(treesize + 1);
-	fill(mintree.begin(), mintree.end(), INF);
-	maxtree.resize(treesize + 1);
-	fill(maxtree.begin(), maxtree.end(), -1);
-
-	for (int i = leftnodestartindex + 1; i <= leftnodestartindex + n; i++) {
-		ll num;
-		cin >> num;
-		mintree[i] = num;
-		maxtree[i] = num;
-	}
-
-	ll i = treesize - 1;
-	while (i != 1) { // mintree 만들기
-		mintree[i / 2] = min(mintree[i / 2], mintree[i]);
-		i--;
-	}
-
-	i = treesize - 1;
-	while (i != 1) { // maxtree 만들기
-		maxtree[i / 2] = max(maxtree[i / 2], maxtree[i]);
-		i--;
-	}
-
-	for (int i = 0; i < m; i++) {
+	init(1, 1, n);
+	while (m--) {
 		ll a, b;
 		cin >> a >> b;
-		a += leftnodestartindex;
-		b += leftnodestartindex;
-		cout << treemin(a, b) << " " << treemax(a, b) << "\n";
+		pll res = query(1, 1, n, a, b);
+		cout << res.first << " " << res.second << "\n";
 	}
+
 
 	return 0;
 }
