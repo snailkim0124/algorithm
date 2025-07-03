@@ -18,7 +18,6 @@ int visited[15][15];
 int island[10];
 const int dy[4] = { -1,0,1,0 };
 const int dx[4] = { 0,1,0,-1 };
-int mn = 987654321;
 int cnt = 0;
 priority_queue<EDGE, vector<EDGE>, greater<EDGE>> pq;
 int res;
@@ -61,7 +60,6 @@ void make_bridge(int y, int x, int dir) {
 		if (!visited[ny][nx]) sum++;
 		else {
 			if (sum >= 2) pq.push({ first_island, visited[ny][nx], sum });
-			// cout << "make_bridge : " << first_island << " : " << visited[ny][nx] << " : " << sum << "\n";
 			return;
 		}
 	}
@@ -101,20 +99,10 @@ int main() {
 		}
 	}
 
-	//cout << "cnt : " << cnt;
-	//for (int i = 0; i < n; i++) {
-	//	for (int j = 0; j < m; j++) {
-	//		cout << visited[i][j] << " ";
-	//	}
-	//	cout << "\n";
-	//}
-	//exit(0);
-
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
 			for (int dir = 0; dir < 4; dir++) {
 				if (visited[i][j]) {
-					// cout << i << " : " << j << "\n";
 					make_bridge(i, j, dir);
 				}
 			}
@@ -124,14 +112,6 @@ int main() {
 	for (int i = 1; i <= 6; i++) {
 		island[i] = i;
 	}
-
-	//while (!pq.empty()) {
-	//	EDGE now = pq.top();
-	//	pq.pop();
-
-	//	cout << now.s << " : " << now.e << " : " << now.v << "\n";
-	//}
-	//exit(0);
 
 	int useEdge = 0; // 연결된 섬 개수 확인
 	while (!pq.empty()) {
@@ -144,9 +124,6 @@ int main() {
 			useEdge++;
 		}
 	}
-
-	// cout << "cnt : " << cnt << "\n";
-	// cout << "useEdge : " << useEdge << "\n";
 
 	if (useEdge == cnt - 1) cout << res;
 	else cout << -1;
