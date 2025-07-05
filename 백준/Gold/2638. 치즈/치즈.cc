@@ -45,17 +45,6 @@ int bfs() {
 	return isMelted;
 }
 
-void printCheese() {
-	cout << "============================\n";
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cout << arr[i][j] << " ";
-		}
-		cout << "\n";
-	}
-	cout << "============================\n";
-}
-
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
@@ -71,7 +60,6 @@ int main() {
 		memset(visited, 0, sizeof(visited));
 		if (!bfs()) break;
 		cnt++;
-		// printCheese();
 	}
 
 	cout << cnt;
