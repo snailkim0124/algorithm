@@ -7,15 +7,12 @@ typedef pair<ll, ll> pll;
 
 int n;
 int visited[10005];
-int arr[10005];
 int dp[10005][2]; // 선정되면 1, 선정 안되면 0
 vector<int> adj[10005];
 
 void dfs(int now) {
 	if (visited[now]) return;
 	visited[now] = 1;
-
-	dp[now][1] = arr[now];
 
 	for (auto next : adj[now]) {
 		if (!visited[next]) {
@@ -34,7 +31,8 @@ int main() {
 
 	cin >> n;
 	for (int i = 1; i <= n; i++) {
-		cin >> arr[i];
+		// 우수 마을 선정한 경우
+		cin >> dp[i][1];
 	}
 
 	for (int i = 0; i < n - 1; i++) {
@@ -45,13 +43,6 @@ int main() {
 	}
 
 	dfs(1);
-
-	/*for (int i = 0; i < 2; i++) {
-		for (int j = 1; j <= n; j++) {
-			cout << dp[j][i] << " ";
-		}
-		cout << "\n";
-	}*/
 
 	cout << max(dp[1][0], dp[1][1]);
 
