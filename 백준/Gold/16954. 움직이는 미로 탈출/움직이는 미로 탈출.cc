@@ -23,12 +23,6 @@ void wall_move() {
 	}
 }
 
-bool check_wall(int y, int x) {
-	if (y - 1 >= 0 && arr[y - 1][x] == '#') return false;
-	if (arr[y][x] == '#') return false;
-	return true;
-}
-
 void bfs() {
 	queue<pii> q;
 	q.push({ starty, startx });
@@ -40,11 +34,12 @@ void bfs() {
 			tie(y, x) = q.front();
 			q.pop();
 
+			if (arr[y][x] == '#') continue;
+
 			for (int i = 0; i < 9; i++) {
 				int ny = y + dy[i];
 				int nx = x + dx[i];
 				if (ny < 0 || nx < 0 || ny >= 8 || nx >= 8) continue;
-				if (!check_wall(ny, nx)) continue;
 				if (ny == endy && nx == endx) {
 					cout << 1;
 					return;
