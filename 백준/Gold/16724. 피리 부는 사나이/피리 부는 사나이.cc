@@ -7,37 +7,20 @@ typedef pair<ll, ll> pll;
 
 int n, m;
 char arr[1005][1005];
-int visited[1005][1005];
-int cnt = 1;
-set<int> st;
+pii parent[1005][1005];
+int cnt = 0;
 
-void print_arr() {
-	cout << "========================\n";
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cout << visited[i][j];
-		}
-		cout << "\n";
-	}
-	cout << "========================\n";
+pii findParent(pii a) {
+	if (a == parent[a.first][a.second]) return a;
+	else return parent[a.first][a.second] = findParent(parent[a.first][a.second]);
 }
 
-int dfs(int y, int x) {
-	if (visited[y][x]) return visited[y][x];
+void unionParent(pii a, pii b) {
+	a = findParent(a);
+	b = findParent(b);
 
-	visited[y][x] = cnt;
-
-	if (arr[y][x] == 'U') {
-		return visited[y][x] = dfs(y - 1, x);
-	}
-	else if (arr[y][x] == 'D') {
-		return visited[y][x] = dfs(y + 1, x);
-	}
-	else if (arr[y][x] == 'L') {
-		return visited[y][x] = dfs(y, x - 1);
-	}
-	else if (arr[y][x] == 'R') {
-		return visited[y][x] = dfs(y, x + 1);
+	if (a != b) {
+		parent[b.first][b.second] = a;
 	}
 }
 
@@ -52,23 +35,30 @@ int main() {
 		}
 	}
 	
+	// 유니온-파인드
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			parent[i][j] = { i, j };
+		}
+	}
+
 	// 싸이클 만들어지는 개수
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < m; j++) {
-			if (!visited[i][j]) {
-				dfs(i, j);
+			pii np;
+			if (arr[i][j] == 'U') np = findParent({ i - 1, j });
+			else if (arr[i][j] == 'D') np = findParent({ i + 1, j });
+			else if (arr[i][j] == 'L') np = findParent({ i, j - 1 });
+			else if (arr[i][j] == 'R') np = findParent({ i, j + 1 });
+
+			if (np != make_pair(i, j)) {
+				unionParent(np, { i, j }); // 부모 같도록 하기
 				cnt++;
 			}
 		}
 	}
 
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			st.insert(visited[i][j]);
-		}
-	}
-
-	cout << st.size();
+	cout << n * m - cnt;
 
 	return 0;
 }
