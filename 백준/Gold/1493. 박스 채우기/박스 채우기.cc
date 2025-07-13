@@ -24,11 +24,8 @@ int main() {
 		v.push_back({ a, b });
 	}
 
-	//for (auto it : v) {
-	//	cout << "it : " << it.first << " " << it.second << "\n";
-	//}
 
-	ll tmp = 0;
+	ll tmp = 0; // 이전거 누적용
 	for (int i = v.size() - 1; i >= 0; i--) {
 		ll tmpL = pow(2, v[i].first);
 		ll cnt = (l / tmpL) * (w / tmpL) * (h / tmpL);
@@ -41,12 +38,10 @@ int main() {
 
 		tmp += min(cnt, v[i].second);
 		res += min(cnt, v[i].second);
-
-		// cout << "tmp : " << tmp << "\n";
 	}
 
 
-	if(tmp == l * w * h) cout << res;
+	if (tmp == l * w * h) cout << res;
 	else cout << -1;
 
 	return 0;
