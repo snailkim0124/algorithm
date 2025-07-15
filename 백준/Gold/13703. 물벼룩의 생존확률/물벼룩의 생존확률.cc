@@ -6,7 +6,7 @@ typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 
 ll k, n;
-ll dp[1000][1000];
+ll dp[140][70]; // 위 + 아래 = 64 + 64
 
 ll go(ll now, ll depth) {
 	if (dp[now][depth] != -1) return dp[now][depth];
