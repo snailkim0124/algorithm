@@ -23,19 +23,24 @@ bool check() {
 	return true;
 }
 
-void go(int a, int cnt) {
-	if (cnt > 3) return;
-	if (check()) {
-		res = min(res, cnt);
+void go(int depth, int cnt) {
+	if (depth == cnt) {
+		if (check()) {
+			cout << cnt;
+			exit(0);
+		}
 		return;
 	}
 
-	for (int i = a; i <= h; i++) {
-		for (int j = 1; j <= n; j++) {
+
+	for (int j = 1; j < n; j++) {
+		for (int i = 1; i <= h; i++) {
 			if (visited[i][j] || visited[i][j - 1] || visited[i][j + 1]) continue;
 			visited[i][j] = 1;
-			go(i, cnt + 1);
+			go(depth, cnt + 1);
 			visited[i][j] = 0;
+
+			while (!visited[i][j - 1] && !visited[i][j + 1]) i++; // 불필요한 연산 넘기기
 		}
 	}
 
@@ -54,10 +59,12 @@ int main() {
 		visited[a][b] = 1;
 	}
 
-	go(1, 0);
-
-	if (res == 987654321) cout << -1;
-	else cout << res;
+	// 최대값이 3밖에 안되기에 가능함
+	for (int i = 0; i <= 3; i++) {
+		go(i, 0);
+	}
+	
+	cout << -1;
 
 	return 0;
 }
