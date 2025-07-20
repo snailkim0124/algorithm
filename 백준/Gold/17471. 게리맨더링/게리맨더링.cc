@@ -11,67 +11,18 @@ vector<int> adj[15];
 int visited[15], cvisited[15];
 int mn = 987654321;
 
-bool connected(vector<int> &v, bool flag) {
-	int cnt = 1;
-	memset(cvisited, 0, sizeof(cvisited));
-	queue<int> q;
-	cvisited[v[0]] = 1;
-	q.push(v[0]);
-
-	while (!q.empty()) {
-		int now = q.front();
-		q.pop();
-
-		for (auto next : adj[now]) {
-			if (!cvisited[next] && visited[next] == flag) {
-				cnt++;
-				cvisited[next] = 1;
-				q.push(next);
-			}
+pii dfs(int now, bool flag) {
+	visited[now] = 1;
+	pii res = { 1, human[now] }; // 사이즈, 인구 수 총합
+	for (int next : adj[now]) {
+		if (!visited[next] && cvisited[next] == flag) {
+			pii tmp = dfs(next, flag);
+			res.first += tmp.first;
+			res.second += tmp.second;
 		}
 	}
 
-	return v.size() == cnt;
-}
-
-bool check() {
-	vector<int> a, b;
-
-	for (int i = 1; i <= n; i++) {
-		if (visited[i]) a.push_back(i);
-		else b.push_back(i);
-	}
-
-	if (a.empty() || b.empty()) return false;
-	if (!connected(a, true)) return false;
-	if (!connected(b, false)) return false;
-
-	return true;
-
-}
-
-void dfs(int now, int cnt) {
-	if (cnt >= 1) {
-		if (check()) {
-			int asum = 0;
-			int bsum = 0;
-
-			for (int i = 1; i <= n; i++) {
-				if (visited[i]) asum += human[i];
-				else bsum += human[i];
-			}
-
-			mn = min(mn, abs(asum - bsum));
-		}
-	}
-
-	for (int i = now; i <= n; i++) {
-		if (!visited[i]) {
-			visited[i] = 1;
-			dfs(i + 1, cnt + 1);
-			visited[i] = 0;
-		}
-	}
+	return res;
 }
 
 int main() {
@@ -93,7 +44,25 @@ int main() {
 		}
 	}
 
-	dfs(1, 0);
+	for (int i = 1; i < (1 << n) - 1; i++) {
+		memset(cvisited, 0, sizeof(cvisited));
+		memset(visited, 0, sizeof(visited));
+
+		int aidx = -1, bidx = -1;
+
+		for (int j = 0; j < n; j++) {
+			if (i & (1 << j)) {
+				cvisited[j + 1] = 1;
+				aidx = j + 1;
+			}
+			else bidx = j + 1;
+		}
+
+		pii a = dfs(aidx, 1);
+		pii b = dfs(bidx, 0);
+
+		if (a.first + b.first == n) mn = min(mn, abs(a.second - b.second));
+	}
 
 	if (mn == 987654321) cout << -1;
 	else cout << mn;
