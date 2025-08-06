@@ -15,17 +15,6 @@ vector<ROTATE> v;
 int visited[10];
 int res = 987654321;
 
-void print_arr() {
-	cout << "==========================\n";
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= m; j++) {
-			cout << arr[i][j] << " ";
-		}
-		cout << "\n";
-	}
-	cout << "==========================\n";
-}
-
 void rotate_arr(int r, int c, int s) {
 	// 회전
 	for (int k = 1; k <= s; k++) {
@@ -46,7 +35,6 @@ void rotate_arr(int r, int c, int s) {
 			swap(arr[r - k][j], arr[r - k][j - 1]);
 		}
 		swap(arr[r - k][c - k], arr[r - k][c - k + 1]);
-		// print_arr();
 	}
 	return;
 }
