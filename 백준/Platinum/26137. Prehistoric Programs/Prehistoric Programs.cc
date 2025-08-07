@@ -12,7 +12,7 @@ typedef struct TABLETS {
 int n;
 vector<TABLETS> v, l, r;
 vector<int> res;
-int cnt;
+int cnt; // 예외 케이스
 
 bool cmpl(TABLETS& a, TABLETS& b) {
 	return a.left < b.left;
@@ -20,14 +20,6 @@ bool cmpl(TABLETS& a, TABLETS& b) {
 
 bool cmpr(TABLETS& a, TABLETS& b) {
 	return a.right > b.right;
-}
-
-void print_v() {
-	cout << "===================\n";
-	for (auto it : v) {
-		cout << it.idx << " : " << it.left << " : " << it.right << "\n";
-	}
-	cout << "===================\n";
 }
 
 int main() {
@@ -58,7 +50,6 @@ int main() {
 		while (!st.empty()) {
 			if (st.top() == '(') right++;
 			else left++;
-			// cout << st.top();
 			st.pop();
 		}
 		
@@ -66,6 +57,7 @@ int main() {
 		else r.push_back({ i, left, right });
 	}
 
+	// 따로 정렬하기
 	sort(l.begin(), l.end(), cmpl);
 	sort(r.begin(), r.end(), cmpr);
 
@@ -82,7 +74,7 @@ int main() {
 		cnt += it.right;
 	}
 
-	// cout << "cnt : " << cnt << "\n";
+	// 딱 떨어지면
 	if (cnt == 0) {
 		for (auto it : res) {
 			cout << it << "\n";
@@ -91,8 +83,6 @@ int main() {
 	else {
 		cout << "impossible\n";
 	}
-
-	
 
 	return 0;
 }
