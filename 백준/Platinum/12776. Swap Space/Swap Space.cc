@@ -6,17 +6,16 @@ typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 
 ll n;
-vector<pll> v;
+vector<pll> v, neg, pos;
 ll res;
 ll drive;
 
-bool cmp(pll& x, pll& y) {
-	ll dx = x.second - x.first;
-	ll dy = y.second - y.first;
+bool cmpp(pll& x, pll& y) {
+	return x.first < y.first;
+}
 
-	if ((dx >= 0) != (dy >= 0)) return dx >= 0;
-	else if (dx >= 0) return x.first < y.first;
-	else return x.second > y.second;
+bool cmpn(pll& x, pll& y) {
+	return x.second > y.second;
 }
 
 int main() {
@@ -27,13 +26,15 @@ int main() {
 	for (int i = 0; i < n; i++) {
 		ll a, b;
 		cin >> a >> b;
-		v.push_back({ a, b });
+		if (a < b) pos.push_back({ a, b });
+		else neg.push_back({ a, b });
 	}
 
-	sort(v.begin(), v.end(), cmp);
-	//for (auto it : v) {
-	//	cout << it.first << " : " << it.second << "\n";
-	//}
+	sort(pos.begin(), pos.end(), cmpp);
+	sort(neg.begin(), neg.end(), cmpn);
+
+	for (auto it : pos) v.push_back(it);
+	for (auto it : neg) v.push_back(it);
 
 	for (int i = 0; i < n; i++) {
 		if (v[i].first > drive) {
