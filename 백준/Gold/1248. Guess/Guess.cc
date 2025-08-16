@@ -49,12 +49,5 @@ int main() {
 
     go(0);
 
-
-    //for (int i = 0; i < n; i++) {
-    //    for (int j = 0; j < n; j++) {
-    //        cout << i << " : " << j << " : " << arr[i][j] << "\n";
-    //    }
-    //}
-
     return 0;
 }
