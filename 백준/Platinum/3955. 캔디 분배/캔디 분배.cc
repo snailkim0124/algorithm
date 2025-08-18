@@ -3,22 +3,16 @@ using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
 int t;
 
-// 확장 유클리드 호제법
-ll ext_gcd(ll a, ll b, ll& x, ll& y) {
-    if (b == 0) {
-        x = 1;
-        y = 0;
-        return a;
-    }
-    ll x1, y1;
-    ll g = ext_gcd(b, a % b, x1, y1);
-    x = y1;
-    y = x1 - (a / b) * y1;
-    return g;
+tll ext_gcd(ll a, ll b) {
+    if (b == 0) return { a, 1, 0 };
+    auto [g, x1, y1] = ext_gcd(b, a % b);
+    return { g, y1, x1 - (a / b) * y1 };
 }
 
 int main() {
@@ -27,9 +21,8 @@ int main() {
 
     cin >> t;
     while (t--) {
-        ll k, c, x, y;
+        ll k, c;
         cin >> k >> c;
-        
         // 예외
         if (c == 1) {
             if (k + 1 > 1e9) cout << "IMPOSSIBLE\n";
@@ -42,14 +35,12 @@ int main() {
             continue;
         }
 
+        auto [g, x, y] = ext_gcd(k, c);
+        y = (y % k + k) % k;
 
-        ll GCD = ext_gcd(k, c, x, y);
-        ll ans = (y % k + k) % k;
-        
-        if (GCD != 1 || ans > 1e9) cout << "IMPOSSIBLE\n"; // 모듈러 역원이 존재 X
-        else cout << ans << "\n";
+        if (g != 1 || y > 1e9) cout << "IMPOSSIBLE\n";
+        else cout << y << "\n";
     }
-    
     
     return 0;
 }
