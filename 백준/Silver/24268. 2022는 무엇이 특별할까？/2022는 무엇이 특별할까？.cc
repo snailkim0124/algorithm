@@ -8,7 +8,7 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 ll n, d;
-vector<ll> v;
+string v;
 string tmp;
 
 ll change_num(string digit_num, ll digit) {
@@ -26,15 +26,13 @@ int main() {
 
 	cin >> n >> d;
 	for (int i = 0; i < d; i++) {
-		v.push_back(i);
+		v += i + '0';
 	}
 
 
 	do {
-		string tmp;
-		if (v[0] == 0) continue;
-		for (auto it : v) tmp += (char)(it + '0');
-		ll ctmp = change_num(tmp, d);
+		if (v[0] == '0') continue;
+		ll ctmp = change_num(v, d);
 		if (ctmp > n) {
 			cout << ctmp << "\n";
 			exit(0);
