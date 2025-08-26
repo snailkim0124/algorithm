@@ -19,7 +19,6 @@ const int dx[5] = { 0,1,0,-1 };
 vector<pii> s, e;
 int sy, sx, sdir = -1, ey, ex, edir = -1; // 중심 좌표, 방향
 // 0 : 세로, 1 : 가로
-int mn = 987654321;
 
 bool check(int y, int x, int dir) {
 	if (y < 0 || x < 0 || y >= n || x >= n) return false;
@@ -33,7 +32,6 @@ bool check_rotate(int y, int x) {
 			if (i < 0 || j < 0 || i >= n || j >= n || arr[i][j] == '1') return false;
 		}
 	}
-
 	return true;
 }
 
@@ -84,24 +82,6 @@ void bfs() {
 	}
 }
 
-void print_arr() {
-	cout << "=========================\n";
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			cout << visited[i][j][0] << " ";
-		}
-		cout << "\n";
-	}
-	cout << "=========================\n";
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			cout << visited[i][j][1] << " ";
-		}
-		cout << "\n";
-	}
-	cout << "=========================\n";
-}
-
 int main() {
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
@@ -138,11 +118,8 @@ int main() {
 	}
 	sy /= 3; sx /= 3; ey /= 3; ex /= 3;
 
-	//cout << sy << " : " << sx << "\n" << ey << " : " << ex << "\n";
-	//cout << sdir << " : " << edir << "\n";
-
 	bfs();
-	// print_arr();
+
 	cout << 0 << "\n";
 
 	
