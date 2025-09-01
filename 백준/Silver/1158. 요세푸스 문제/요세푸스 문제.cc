@@ -1,38 +1,33 @@
-#include <iostream>
-#include <algorithm>
-#include <stack>
-#include <vector>
-#include <queue>
-
+#include <bits/stdc++.h>
 using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
 int n, k;
-queue<int> q;
+vector<int> v;
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
+	ios::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
 
-    cin >> n >> k;
-    
-    for (int i = 1; i <= n; i++) {
-        q.push(i);
-    }
+	cin >> n >> k;
+	for (int i = 1; i <= n; i++) {
+		v.push_back(i);
+	}
 
-    cout << "<";
-    while (!q.empty()) {
-        for (int i = 0; i < k - 1; i++) {
-            q.push(q.front());
-            q.pop();
-        }
-        if (q.size() == 1) {
-            cout << q.front() << ">";
-            q.pop();
-        }
-        else {
-            cout << q.front() << ", ";
-            q.pop();
-        }
-    }
-    return 0;
+	int idx = 0;
+	cout << "<";
+	while (!v.empty()) {
+		idx = (idx + k - 1) % v.size();
+		if(v.size() == 1) cout << v[idx];
+		else cout << v[idx] << ", ";
+		v.erase(v.begin() + idx);
+	}
+	cout << ">";
+
+	return 0;
 }
