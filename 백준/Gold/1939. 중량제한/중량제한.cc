@@ -11,33 +11,9 @@ typedef tuple<ll, ll, ll> tll;
 int n, m;
 const int INF = INT_MAX;
 vector<pii> adj[10005];
-int visited[10005];
+int dist[10005];
+priority_queue<pii, vector<pii>> pq;
 int s, e;
-int res;
-
-int bfs(int dist) {
-    queue<int> q;
-    q.push(s);
-    visited[s] = 1;
-
-    while (!q.empty()) {
-        int now = q.front();
-        q.pop();
-        if (now == e) return true;
-
-        for (auto next : adj[now]) {
-            int nxt = next.second;
-            int nxt_dist = next.first;
-
-            if (!visited[nxt] && nxt_dist >= dist) {
-                visited[nxt] = 1;
-                q.push(nxt);
-            }
-        }
-    }
-
-    return false;
-}
 
 int main() {
     ios::sync_with_stdio(false);
@@ -54,22 +30,29 @@ int main() {
 
     cin >> s >> e;
 
-    int left = 1;
-    int right = 1000000000;
+    fill(dist, dist + 10005, -1);
+    pq.push({ INF, s }); // 가중치, 시작위치
+    dist[s] = INF;
+    while (!pq.empty()) {
+        int now = pq.top().second;
+        int now_dist = pq.top().first;
+        pq.pop();
 
-    while (left <= right) {
-        int mid = (left + right) / 2;
-        memset(visited, 0, sizeof(visited));
-        if (bfs(mid)) {
-            res = mid;
-            left = mid + 1;
-        }
-        else {
-            right = mid - 1;
+        if (dist[now] > now_dist) continue;
+
+        for (pii next : adj[now]) {
+            int nxt = next.second;
+            int next_dist = min(now_dist, next.first);
+
+            if (dist[nxt] < next_dist) {
+                dist[nxt] = next_dist;
+                pq.push({ dist[nxt] , nxt });
+            }
         }
     }
-    
-    cout << res << "\n";
-    
+
+    cout << dist[e] << "\n";
+
+
     return 0;
 }
