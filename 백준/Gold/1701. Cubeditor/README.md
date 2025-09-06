@@ -1,18 +1,18 @@
-# [Gold III] Cubeditor - 1701 
+# [Gold II] Cubeditor - 1701 
 
 [문제 링크](https://www.acmicpc.net/problem/1701) 
 
 ### 성능 요약
 
-메모리: 2160 KB, 시간: 88 ms
+메모리: 2160 KB, 시간: 80 ms
 
 ### 분류
 
-KMP, 문자열
+문자열, KMP
 
 ### 제출 일자
 
-2024년 1월 20일 00:02:45
+2025년 9월 6일 17:26:38
 
 ### 문제 설명
 
