@@ -8,16 +8,6 @@ typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
-const ll INF = 987654321;
-ll dp[1000005];
-
-int go(const vector<int>& f, int idx) {
-    if (idx < 0 || f[idx] == 0) return INF;
-    if (dp[idx] != INF) return dp[idx];
-
-    return dp[idx] = min(f[idx], go(f, f[idx] - 1)); // 가장 최소인 주기 찾기
-}
-
 vector<int> failure(string& p) {
     vector<int> f(p.size());
     int j = 0;
@@ -58,11 +48,13 @@ int main() {
     cin >> s;
 
     vector<int> f = failure(s);
-
-    fill(dp, dp + 1000005, INF);
+    vector<int> dp(n, 0);
 
     for (int i = 0; i < n; i++) {
-        if (go(f, i) != INF) {
+        if (f[i]) {
+            // 최소 주기 찾기
+            if (dp[f[i] - 1]) dp[i] = dp[f[i] - 1];
+            else dp[i] = f[i];
             sum += (i + 1) - dp[i];
         }
     }
