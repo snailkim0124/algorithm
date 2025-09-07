@@ -1,61 +1,71 @@
 #include <bits/stdc++.h>
-
+#define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
+struct Trie {
+    struct Node {
+        int end;
+        int nxt[26];
+        Node() {
+            end = 0;
+            fill(nxt, nxt + 26, -1);
+        }
+    };
 
-int n, m;
-int ans;
-const int ROOT = 1;
-int unused = 2;
-const int MX = 10000 * 500 + 5;
-int nxt[MX][26];
+    vector<Node> trie;
+    Trie() { trie.emplace_back(); }
 
-int c2i(char c) {
-	return c - 'A';
-}
+    void insert(const string& s) {
+        int node = 0;
+        for (char c : s) {
+            int idx = c - 'a';
+            if (trie[node].nxt[idx] == -1) {
+                trie[node].nxt[idx] = trie.size();
+                trie.emplace_back();
+            }
+            node = trie[node].nxt[idx];
+        }
+        trie[node].end++;
+    }
 
-void insert(string& s) {
-	int cur = ROOT;
-	for (auto c : s) {
-		if (nxt[cur][c2i(c)] == -1) {
-			nxt[cur][c2i(c)] = unused++;
-		}
-		cur = nxt[cur][c2i(c)];
-	}
-}
+    bool startsWith(const string& s) {
+        int node = 0;
+        for (char c : s) {
+            int idx = c - 'a';
+            if (trie[node].nxt[idx] == -1) return false;
+            node = trie[node].nxt[idx];
+        }
+        return true;
+    }
 
-bool find(string& s) {
-	int cur = ROOT;
-	for (auto c : s) {
-		if (nxt[cur][c2i(c)] == -1) {
-			return 0;
-		}
-		cur = nxt[cur][c2i(c)];
-	}
-	return 1;
-}
+};
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL); cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
 
-	fill(&nxt[0][0], &nxt[0][0] + MX * 26, -1);
+    Trie T;
+    int n, m, cnt = 0;
+    cin >> n >> m;
+    while (n--) {
+        string s;
+        cin >> s;
+        T.insert(s);
+    }
 
-	cin >> n >> m;
-	while (n--) {
-		string s;
-		cin >> s;
-		insert(s);
-	}
+    while (m--) {
+        string s;
+        cin >> s;
+        cnt += T.startsWith(s);
+    }
 
-	while (m--) {
-		string s;
-		cin >> s;
-		ans += find(s);
-	}
+    cout << cnt << "\n";
 
-	cout << ans;
-
-	return 0;
+    return 0;
 }
