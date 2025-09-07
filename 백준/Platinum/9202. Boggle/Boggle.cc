@@ -27,65 +27,101 @@ map<int, int> mp_score = {
     {8, 11},
 };
 
+struct Node {
+    bool end, find;
+    map<char, Node*> nxt;
+    Node() : end(false), find(false) {}
+};
+
+struct Trie {
+    Node* root;
+    Trie() { root = new Node(); }
+
+    void reset() {
+        resetNode(root);
+    }
+
+    void resetNode(Node* node) {
+        node->find = false;
+        for (auto& it : node->nxt) {
+            resetNode(it.second);
+        }
+    }
+
+    void insert(const string& s) {
+        Node* node = root;
+        for (char c : s) {
+            if (!node->nxt[c]) {
+                node->nxt[c] = new Node();
+            }
+            node = node->nxt[c];
+        }
+        node->end = true;
+    }
+};
+
 bool cmp(string& a, string& b) {
     if (a.size() != b.size()) return a.size() > b.size();
     else return a < b;
 }
 
-bool dfs(int y, int x, int idx, string word) {
-    if (idx == word.size()) return true;
-    if (x < 0 || x >= 4 || y < 0 || y >= 4 || visited[y][x] || arr[y][x] != word[idx]) return false;
+void dfs(int y, int x, Node* node, string word) {
+    if (x < 0 || x >= 4 || y < 0 || y >= 4 || visited[y][x]) return;
+    char c = arr[y][x];
+    if (!node->nxt.count(c)) return;
 
+    Node* next = node->nxt[c];
+    word.push_back(c);
     visited[y][x] = 1;
+
+    // 최종에 찾은 문자열 없으면 넣기
+    if (next->end && !next->find) {
+        ans_str.push_back(word);
+        next->find = true;
+    }
+
     for (int i = 0; i < 8; i++) {
         int ny = y + dy[i];
         int nx = x + dx[i];
-        if (dfs(ny, nx, idx + 1, word)) {
-            visited[y][x] = 0;
-            return true;
-        }
+        dfs(ny, nx, next, word);
     }
 
     visited[y][x] = 0;
-    return false;
-}
-
-void check(string word) {
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            if (arr[i][j] == word[0] && dfs(i, j, 0, word)) {
-                ans_str.push_back(word);
-            }
-        }
-    }
+    word.pop_back();
+    return;
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(NULL); cout.tie(NULL);
 
+    Trie T;
     cin >> w;
     for (int i = 0; i < w; i++) {
         cin >> s[i];
+        T.insert(s[i]);
     }
 
     cin >> b;
     while (b--) {
+        T.reset();
         int mxscore = 0;
         ans_str.clear();
         memset(arr, 0, sizeof(arr));
         memset(visited, 0, sizeof(visited));
+
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 cin >> arr[i][j];
             }
         }
 
-        for (int i = 0; i < w; i++) {
-            check(s[i]);
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                dfs(i, j, T.root, "");
+            }
         }
 
-        ans_str.erase(unique(all(ans_str)), ans_str.end()); // 중복 원소 제거
         sort(all(ans_str), cmp); // 정렬
         for (auto it : ans_str) {
             mxscore += mp_score[it.size()];
