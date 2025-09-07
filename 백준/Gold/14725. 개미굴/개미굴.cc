@@ -1,51 +1,70 @@
 #include <bits/stdc++.h>
-
+#define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
-int ans;
-const int ROOT = 1;
-int unused = 2;
-const int MX = 1000 * 15 + 5;
-map<string, int> nxt[MX];
+struct Node {
+    map<string, Node*> nxt;
+};
 
-void insert(vector<string>& v) {
-	int cur = ROOT;
-	for (auto s : v) {
-		if (!nxt[cur][s]) {
-			nxt[cur][s] = unused++;
-		}
-		cur = nxt[cur][s];
-	}
-}
+struct Trie {
+    Node* root;
+    Trie() { root = new Node(); }
 
-void dfs(int now, int depth) {
-	for (auto there : nxt[now]) {
-		for (int i = 0; i < depth; i++) {
-			cout << "--";
-		}
-		cout << there.first << "\n";
-		dfs(there.second, depth + 1);
-	}
-}
+    void insert(const vector<string>& v) {
+        Node* node = root;
+        for (const auto& s : v) {
+            if (!node->nxt.count(s)) {
+                node->nxt[s] = new Node();
+            }
+            node = node->nxt[s];
+        }
+    }
+
+    void dfs(int depth, Node* node) {
+        for (auto& it : node->nxt) {
+            for (int i = 0; i < depth; i++) {
+                cout << "--";
+            }
+            cout << it.first << "\n";
+            dfs(depth + 1, it.second);
+        }
+    }
+
+    void print() {
+        dfs(0, root);
+    }
+
+};
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL); cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
 
-	int n;
-	cin >> n;
-	for (int i = 0; i < n; i++) {
-		int m;
-		cin >> m;
-		vector<string> v(m);
-		for (int j = 0; j < m; j++) {
-			cin >> v[j];
-		}
-		insert(v);
-	}
+    int n;
+    Trie T;
 
-	dfs(1, 0);
+    cin >> n;
 
-	return 0;
+    for (int i = 0; i < n; i++) {
+        int k;
+        cin >> k;
+        vector<string> v(k);
+        for (int j = 0; j < k; j++) {
+            cin >> v[j];
+        }
+
+        T.insert(v);
+    }
+
+    T.print();
+   
+    
+
+    return 0;
 }
