@@ -45,8 +45,7 @@ int main() {
             cout << 1 << "\n";
             vector<int> ans;
             for (int j = 1; j <= n; j++) {
-                if ((i >> (j - 1)) & 1) ans.push_back(1);
-                else ans.push_back(0);
+                ans.push_back((i >> (j - 1)) & 1);
             }
 
             for (auto it : ans) {
