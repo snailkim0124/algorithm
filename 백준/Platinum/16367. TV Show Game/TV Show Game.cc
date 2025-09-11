@@ -32,7 +32,7 @@ void dfs2(int now, int idx) {
 }
 
 int neg(int x) {
-    return (x % 2 == 0 ? x + 1 : x - 1);
+    return x > k ? x - k : x + k;
 }
 
 int main() {
@@ -48,10 +48,10 @@ int main() {
 
             // R은 R끼리 B는 B끼리
             if (c == 'R') {
-                v.push_back(2 * l);
+                v.push_back(l);
             }
             else if (c == 'B') {
-                v.push_back(2 * l + 1);
+                v.push_back(l + k);
             }
         }
 
@@ -85,11 +85,11 @@ int main() {
 
     vector<char> ans;
     for (int i = 1; i <= k; i++) {
-        if (scc_idx[2 * i] == scc_idx[2 * i + 1]) {
+        if (scc_idx[i] == scc_idx[i + k]) {
             cout << -1 << "\n";
             exit(0);
         }
-        else if (scc_idx[2 * i] > scc_idx[2 * i + 1]) {
+        else if (scc_idx[i] > scc_idx[i + k]) {
             ans.push_back('R');
         }
         else ans.push_back('B');
