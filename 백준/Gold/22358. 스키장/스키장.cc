@@ -8,14 +8,9 @@ typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
-typedef struct SKI {
-    ll time, now, cnt;
-}SKI;
-
 ll n, m, k, s, t;
 ll dp[100005][15];
 vector<pll> adj[100005], rev_adj[100005];
-queue<SKI> q;
 ll ans;
 
 ll go(int now, int cnt) {
@@ -57,7 +52,7 @@ int main() {
     }
 
     memset(dp, -1, sizeof(dp));
-    
+
     ll ans = go(s, 0);
 
     if (ans == -1e18) cout << -1 << "\n";
