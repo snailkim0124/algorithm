@@ -23,7 +23,7 @@ int main() {
     for (int i = 0; i < n; i++) {
         cin >> arr[i];
     }
-    
+
     // 처음과 끝은 없다고 보면 됨
     ll mx = 0;
     for (int i = 1; i < n; i++) {
@@ -34,20 +34,14 @@ int main() {
         mx = max(mx, arr[i]);
     }
 
-    //for (auto it : v) {
-    //    cout << it << " ";
-    //}
-    //cout << "\n";
-
     sort(all(v), greater<>());
-
 
     for (int i = 0; i < v.size() / 2; i++) {
         res += v[i];
     }
 
     cout << res << "\n";
-    
+
 
     return 0;
 }
