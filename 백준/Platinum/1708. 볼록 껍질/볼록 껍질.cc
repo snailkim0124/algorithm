@@ -1,76 +1,68 @@
 #include <bits/stdc++.h>
-
+#define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
-int n;
-vector<pll> v;
-stack<pll> st;
+struct Point {
+    ll x, y;
+    bool operator<(const Point& tmp) const {
+        if (y != tmp.y) return y < tmp.y;
+        return x < tmp.x;
+    }
+};
 
-ll ccw(pll p1, pll p2, pll p3) {
-	ll s = p1.first * p2.second + p2.first * p3.second + p3.first * p1.second;
-	s -= (p1.second * p2.first + p2.second * p3.first + p3.second * p1.first);
-
-	if (s > 0) return 1;
-	else if (s == 0) return 0;
-	else return -1;
+ll ccw(Point& a, Point& b, Point& c) {
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
-bool cmp(pll a, pll b) {
-	ll cc = ccw(v[0], a, b);
+vector<Point> convexHull(vector<Point>& v) {
+    if (v.size() <= 1) return v;
 
-	// 각도, y, x 작은 순
-	if (cc) {
-		return cc > 0;
-	}
-	else if (a.second != b.second) {
-		return a.second < b.second;
-	}
-	else {
-		return a.first < b.first;
-	}
+    sort(all(v));
+    Point tmp = v[0]; // 기준점
+
+    sort(v.begin() + 1, v.end(), [&](Point& a, Point& b) {
+        ll cc = ccw(tmp, a, b);
+        if (cc != 0) return cc > 0;
+        ll da = (a.x - tmp.x) * (a.x - tmp.x) + (a.y - tmp.y) * (a.y - tmp.y);
+        ll db = (b.x - tmp.x) * (b.x - tmp.x) + (b.y - tmp.y) * (b.y - tmp.y);
+        return da < db;
+    });
+
+    vector<Point> hull;
+    hull.push_back(v[0]);
+    hull.push_back(v[1]);
+
+    for (int i = 2; i < v.size(); i++) {
+        while (hull.size() >= 2 && ccw(hull[hull.size() - 2], hull.back(), v[i]) <= 0) {
+            hull.pop_back();
+        }
+        hull.push_back(v[i]);
+    }
+
+    return hull;
 }
-
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL); cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
 
-	cin >> n;
+    int n;
+    cin >> n;
+    vector<Point> v(n);
+    for (int i = 0; i < n; i++) {
+        cin >> v[i].x >> v[i].y;
+    }
 
-	v.resize(n);
-	for (int i = 0; i < n; i++) {
-		cin >> v[i].first >> v[i].second;
-	}
+    vector<Point> hull = convexHull(v);
 
-	for (int i = 1; i < n; i++) {
-		if (v[i].second < v[0].second || (v[i].second == v[0].second && v[i].first < v[0].first)) {
-			swap(v[0], v[i]);
-		}
-	}
+    cout << hull.size() << "\n";
+    
 
-	sort(v.begin() + 1, v.end(), cmp);
-
-	st.push(v[0]);
-	st.push(v[1]);
-
-	for (int i = 2; i < n; i++) {
-		while (st.size() >= 2) {
-			pll top2 = st.top();
-			st.pop();
-
-			pll top1 = st.top();
-			if (ccw(top1, top2, v[i]) > 0) {
-				st.push(top2);
-				break;
-			}
-		}
-		st.push(v[i]);
-	}
-
-	cout << st.size();
-
-	return 0;
+    return 0;
 }
