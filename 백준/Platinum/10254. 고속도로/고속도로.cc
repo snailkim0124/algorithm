@@ -1,139 +1,117 @@
 #include <bits/stdc++.h>
-
+#define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
-int t, n;
-vector<pll> v;
-stack<pll> st;
-vector<pll> v2;
+struct Point {
+    ll x, y;
+    bool operator<(const Point& tmp) const {
+        if (x != tmp.x) return x < tmp.x;
+        return y < tmp.y;
+    }
 
-pll operator-(pll a, pll b) {
-	pll c;
-	c.first = a.first - b.first;
-	c.second = a.second - b.second;
-	return c;
+    Point operator-(const Point& tmp) const {
+        return { x - tmp.x, y - tmp.y };
+    }
 };
 
-
-ll dist(pll a, pll b) {
-	return (a.first - b.first) * (a.first - b.first) + (a.second - b.second) * (a.second - b.second);
+ll ccw(Point& a, Point& b, Point& c) {
+    return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
 }
 
-ll ccw(pll p1, pll p2, pll p3) {
-	ll s = p1.first * p2.second + p2.first * p3.second + p3.first * p1.second;
-	s -= (p1.second * p2.first + p2.second * p3.first + p3.second * p1.first);
-
-	if (s > 0) return 1;
-	else if (s == 0) return 0;
-	else return -1;
+ll dist(Point& a, Point& b) {
+    return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
 }
 
-bool cmp(pll a, pll b) {
-	ll cc = ccw(v[0], a, b);
+pair<Point, Point> rotate_cali(vector<Point>& hull) {
+    ll sz = hull.size();
+    if (sz == 1) return { hull[0], hull[0] };
 
-	// 각도, y, x 작은 순
-	if (cc) {
-		return cc > 0;
-	}
-	else if (a.second != b.second) {
-		return a.second < b.second;
-	}
-	else {
-		return a.first < b.first;
-	}
+    Point origin = { 0,0 };
+    Point a = hull[0], b = hull[1];
+    ll mxdist = dist(a, b);
+
+    int j = 1;
+    for (int i = 0; i < sz; i++) {
+        Point pi, pj;
+        pi.x = hull[(i + 1) % sz].x - hull[i].x;
+        pi.y = hull[(i + 1) % sz].y - hull[i].y;
+
+        pj.x = hull[(j + 1) % sz].x - hull[j].x;
+        pj.y = hull[(j + 1) % sz].y - hull[j].y;
+
+        while (ccw(origin, pi, pj) > 0) {
+            j = (j + 1) % sz;
+            pj.x = hull[(j + 1) % sz].x - hull[j].x;
+            pj.y = hull[(j + 1) % sz].y - hull[j].y;
+        }
+
+        if (mxdist < dist(hull[i], hull[j])) {
+            mxdist = dist(hull[i], hull[j]);
+            a = hull[i];
+            b = hull[j];
+        }
+    }
+
+    return { a,b };
 }
 
+vector<Point> convexHull(vector<Point>& v) {
+    if (v.size() <= 1) return v;
+
+    sort(all(v));
+
+    vector<Point> hull;
+
+    // 하단
+    for (auto p : v) {
+        while (hull.size() >= 2 && ccw(hull[hull.size() - 2], hull.back(), p) <= 0) {
+            hull.pop_back();
+        }
+        hull.push_back(p);
+    }
+
+    // 상단
+    int sz = hull.size();
+    for (int i = v.size() - 2; i >= 0; i--) {
+        Point p = v[i];
+        while (hull.size() > sz && ccw(hull[hull.size() - 2], hull.back(), p) <= 0) {
+            hull.pop_back();
+        }
+        hull.push_back(p);
+    }
+
+    hull.pop_back(); // 마지막 중복 제거
+
+    return hull;
+}
 
 int main() {
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL); cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(NULL); cout.tie(NULL);
 
-	cin >> t;
-	while (t--) {
-		v.clear();
-		v2.clear();
-		st = stack<pll>();
-		ll x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+    ll t;
+    cin >> t;
+    while (t--) {
+        ll n;
+        cin >> n;
+        vector<Point> v(n);
 
-		cin >> n;
-		v.resize(n);
-		for (int i = 0; i < n; i++) {
-			cin >> v[i].first >> v[i].second;
-		}
+        for (int i = 0; i < n; i++) {
+            cin >> v[i].x >> v[i].y;
+        }
 
-		for (int i = 1; i < n; i++) {
-			if (v[i].second < v[0].second || (v[i].second == v[0].second && v[i].first < v[0].first)) {
-				swap(v[0].first, v[i].first);
-				swap(v[0].second, v[i].second);
-			}
-		}
+        vector<Point> hull = convexHull(v);
 
-		sort(v.begin() + 1, v.end(), cmp);
+        auto res = rotate_cali(hull);
 
-		st.push(v[0]);
-		st.push(v[1]);
+        cout << res.first.x << " " << res.first.y << " " << res.second.x << " " << res.second.y << "\n";
+    }
 
-		for (int i = 2; i < n; i++) {
-			while (st.size() >= 2) {
-				pll top2 = st.top();
-				st.pop();
-
-				pll top1 = st.top();
-				if (ccw(top1, top2, v[i]) > 0) {
-					st.push(top2);
-					break;
-				}
-			}
-			st.push(v[i]);
-		}
-
-		ll size = st.size();
-		v2.resize(size);
-		for (int i = 0; i < size; i++) {
-			v2[i] = st.top();
-			st.pop();
-		}
-		reverse(v2.begin(), v2.end());
-
-		ll left = 0;
-		ll right = 0;
-		pll origin;
-		origin.first = 0;
-		origin.second = 0;
-
-		for (int i = 0; i < size; i++) {
-			if (v2[i].first < v2[left].first) left = i;
-			if (v2[i].first > v2[right].first) right = i;
-		}
-
-		ll DIST = dist(v2[left], v2[right]);
-		x1 = v2[left].first;
-		y1 = v2[left].second;
-		x2 = v2[right].first;
-		y2 = v2[right].second;
-
-		for (int i = 0; i < size; i++) {
-			if (ccw(origin, v2[(left + 1) % size] - v2[left], v2[right] - v2[(right + 1) % size]) > 0) {
-				left = (left + 1) % size;
-			}
-			else right = (right + 1) % size;
-
-			if (DIST < dist(v2[left], v2[right])) {
-				DIST = dist(v2[left], v2[right]);
-				x1 = v2[left].first;
-				y1 = v2[left].second;
-				x2 = v2[right].first;
-				y2 = v2[right].second;
-			}
-
-		}
-
-		cout << x1 << " " << y1 <<" " << x2 << " " << y2 << "\n";
-	}
-	
-
-	return 0;
+    return 0;
 }
