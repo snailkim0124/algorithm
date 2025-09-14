@@ -44,14 +44,13 @@ bool isinside(vector<Point>& v, Point p) {
     int sz = v.size();
     ll cnt = 0;
 
-    Point tmp = { (ll)1e9, p.y + 1 }; // 반직선
-
     for (int i = 0, j = sz - 1; i < sz; j = i++) {
         Point a = v[i], b = v[j];
 
-        if (isinline(a, b, p)) return false;
+        if (isinline(a, b, p)) return true;
 
         if ((a.y > p.y) != (b.y > p.y)) {
+            // 교차점 x 찾기
             double x = a.x + (b.x - a.x) * (p.y - a.y) / (double)(b.y - a.y);
             if (x > p.x) cnt++;
         }
