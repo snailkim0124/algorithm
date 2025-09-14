@@ -49,7 +49,7 @@ bool isinside(vector<Point>& v, Point p) {
     for (int i = 0, j = sz - 1; i < sz; j = i++) {
         Point a = v[i], b = v[j];
 
-        // if (isinline(a, b, p)) return false;
+        if (isinline(a, b, p)) return false;
 
         if ((a.y > p.y) != (b.y > p.y)) {
             double x = a.x + (b.x - a.x) * (p.y - a.y) / (double)(b.y - a.y);
@@ -91,25 +91,6 @@ vector<Point> convexHull(vector<Point>& v) {
 }
 
 bool check(vector<Point>& hull1, vector<Point>& hull2) {
-    ll sz1 = hull1.size();
-    ll sz2 = hull2.size();
-    // 점, 점
-    if (sz1 == 1 && sz2 == 1) {
-        return true;
-    }
-    // 점, 선
-    else if (sz1 == 1 && sz2 == 2) {
-        return !isinline(hull2[0], hull2[1], hull1[0]);
-    }
-    // 선, 점
-    else if (sz1 == 2 && sz2 == 1) {
-        return !isinline(hull1[0], hull1[1], hull2[0]);
-    }
-    // 선, 선
-    else if (sz1 == 2 && sz2 == 2) {
-        return !iscross(hull1[0], hull1[1], hull2[0], hull2[1]);
-    }
-
     // 흰색 컨벡스에서 검은점 체크
     for (auto p : hull1) {
         if (isinside(hull2, p)) return false;
