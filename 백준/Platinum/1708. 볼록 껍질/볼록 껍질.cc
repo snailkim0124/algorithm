@@ -11,8 +11,8 @@ typedef tuple<ll, ll, ll> tll;
 struct Point {
     ll x, y;
     bool operator<(const Point& tmp) const {
-        if (y != tmp.y) return y < tmp.y;
-        return x < tmp.x;
+        if (x != tmp.x) return x < tmp.x;
+        return y < tmp.y;
     }
 };
 
@@ -24,26 +24,28 @@ vector<Point> convexHull(vector<Point>& v) {
     if (v.size() <= 1) return v;
 
     sort(all(v));
-    Point tmp = v[0]; // 기준점
-
-    sort(v.begin() + 1, v.end(), [&](Point& a, Point& b) {
-        ll cc = ccw(tmp, a, b);
-        if (cc != 0) return cc > 0;
-        ll da = (a.x - tmp.x) * (a.x - tmp.x) + (a.y - tmp.y) * (a.y - tmp.y);
-        ll db = (b.x - tmp.x) * (b.x - tmp.x) + (b.y - tmp.y) * (b.y - tmp.y);
-        return da < db;
-    });
 
     vector<Point> hull;
-    hull.push_back(v[0]);
-    hull.push_back(v[1]);
-
-    for (int i = 2; i < v.size(); i++) {
-        while (hull.size() >= 2 && ccw(hull[hull.size() - 2], hull.back(), v[i]) <= 0) {
+    
+    // 하단
+    for (auto p : v) {
+        while (hull.size() >= 2 && ccw(hull[hull.size() - 2], hull.back(), p) <= 0) {
             hull.pop_back();
         }
-        hull.push_back(v[i]);
+        hull.push_back(p);
     }
+    
+    // 상단
+    int sz = hull.size();
+    for (int i = v.size() - 2; i >= 0; i--) {
+        Point p = v[i];
+        while (hull.size() > sz && ccw(hull[hull.size() - 2], hull.back(), p) <= 0) {
+            hull.pop_back();
+        }
+        hull.push_back(p);
+    }
+
+    hull.pop_back(); // 마지막 중복 제거
 
     return hull;
 }
@@ -62,7 +64,6 @@ int main() {
     vector<Point> hull = convexHull(v);
 
     cout << hull.size() << "\n";
-    
 
     return 0;
 }
