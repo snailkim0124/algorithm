@@ -101,8 +101,8 @@ int main() {
         cin >> vk[i].x >> vk[i].y;
     }
 
-    vector<Point> hulla = convexHull(va);
-    vector<Point> hullb = convexHull(vb);
+    vector<Point> hulla = va;
+    vector<Point> hullb = vb;
 
     ll cnt = 0;
     for (auto p : vk) {
