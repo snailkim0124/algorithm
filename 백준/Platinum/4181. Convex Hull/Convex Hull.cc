@@ -25,12 +25,6 @@ vector<Point> convexHull(vector<Point>& v) {
 
     sort(all(v));
 
-    //cout << "sort-1 : \n";
-    //for (auto it : v) {
-    //    cout << it.x << " : " << it.y << "\n";
-    //}
-    //cout << "\n";
-
     Point tmp = v[0]; // 기준점
 
     // 기준점 기준으로 반시계 정렬
@@ -42,22 +36,10 @@ vector<Point> convexHull(vector<Point>& v) {
         return da < db;
         });
 
-    //cout << "sort : \n";
-    //for (auto it : v) {
-    //    cout << it.x << " : " << it.y << "\n";
-    //}
-    //cout << "\n";
-
     // 마지막 일직선 처리
     int idx = v.size() - 1;
     while (!ccw(tmp, v[idx - 1], v[idx])) idx--;
     reverse(v.begin() + idx, v.end());
-
-   /* cout << "reverse : \n";
-    for (auto it : v) {
-        cout << it.x << " : " << it.y << "\n";
-    }
-    cout << "\n";*/
 
     return v;
 }
