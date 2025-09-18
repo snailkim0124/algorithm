@@ -12,22 +12,12 @@ int w, h;
 char arr[25][25];
 int visited[25][25];
 int sy, sx;
-int ans = -1;
 const int dy[4] = { -1,0,1,0 };
 const int dx[4] = { 0,1,0,-1 };
 vector<pii> wastev;
 const int INF = 987654321;
 int stow[25], wtow[25][25];
-
-void printarr() {
-    cout << "===========================\n";
-    for (int i = 0; i < h; i++) {
-        for (int j = 0; j < w; j++) {
-            cout << visited[i][j] << "\t";
-        }
-        cout << "\n";
-    }
-}
+int dp[10][1 << 10];
 
 void bfs(int _y, int _x) {
     fill(&visited[0][0], &visited[0][0] + 25 * 25, INF);
@@ -54,44 +44,18 @@ void bfs(int _y, int _x) {
     // printarr();
 }
 
-void go(int y, int x) {
-    vector<int> order(wastev.size());
-    iota(all(order), 0);
+int go(int bit, int idx, int n) {
+    if (bit == (1 << n) - 1) return 0; // 모든 쓰레기 방문
+    if (dp[idx][bit] != -1) return dp[idx][bit];
 
-    bfs(y, x);
-
-    // 시작 지점에서 다른 쓰레기까지 최단거리
-    for (int i = 0; i < wastev.size(); i++) {
-        stow[i] = visited[wastev[i].first][wastev[i].second];
+    int res = INF;
+    for (int i = 0; i < n; i++) {
+        if (bit & (1 << i)) continue;
+        if (wtow[idx][i] == INF) continue;
+        res = min(res, wtow[idx][i] + go(bit | (1 << i), i, n));
     }
 
-    // 쓰레기에서 쓰레기까지 최단 거리
-    for (int i = 0; i < wastev.size(); i++) {
-        bfs(wastev[i].first, wastev[i].second);
-        for (int j = 0; j < wastev.size(); j++) {
-            if (i == j) continue;
-            wtow[i][j] = visited[wastev[j].first][wastev[j].second];
-        }
-    }
-
-    // 완탐
-    do {
-        int sum = stow[order[0]];
-
-        for (int i = 0; i < order.size() - 1; i++) {
-            int u = order[i];
-            int v = order[i + 1];
-
-            if (wtow[u][v] == INF) {
-                sum = INF;
-                break;
-            }
-            sum += wtow[u][v];
-        }
-
-        if (sum != INF) ans = min(ans, sum);
-
-    } while (next_permutation(all(order)));
+    return dp[idx][bit] = res;
 }
 
 int main() {
@@ -102,7 +66,6 @@ int main() {
         memset(stow, 0, sizeof(stow));
         memset(wtow, 0, sizeof(wtow));
         wastev.clear();
-        ans = INF;
         memset(arr, 0, sizeof(arr));
         cin >> w >> h;
         if (!w && !h) break;
@@ -121,8 +84,29 @@ int main() {
             }
         }
 
-        go(sy, sx);
-        
+        bfs(sy, sx);
+
+        // 시작 지점에서 다른 쓰레기까지 최단거리
+        for (int i = 0; i < wastev.size(); i++) {
+            stow[i] = visited[wastev[i].first][wastev[i].second];
+        }
+
+        // 쓰레기에서 쓰레기까지 최단 거리
+        for (int i = 0; i < wastev.size(); i++) {
+            bfs(wastev[i].first, wastev[i].second);
+            for (int j = 0; j < wastev.size(); j++) {
+                if (i == j) continue;
+                wtow[i][j] = visited[wastev[j].first][wastev[j].second];
+            }
+        }
+
+        int ans = INF;
+        memset(dp, -1, sizeof(dp));
+        for (int i = 0; i < wastev.size(); i++) {
+            if (stow[i] == INF) continue;
+            ans = min(ans, stow[i] + go(1 << i, i, wastev.size()));
+        }
+
         if (ans == INF) cout << -1 << "\n";
         else cout << ans << "\n";
     }
