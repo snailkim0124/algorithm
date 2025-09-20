@@ -9,7 +9,6 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 string s;
-bool flag;
 deque<char> dq;
 
 int main() {
@@ -19,15 +18,11 @@ int main() {
     cin >> s;
     
     for (auto c : s) {
-        if (dq.empty()) {
+        if (dq.empty() || dq.front() < c) {
             dq.push_back(c);
         }
         else if (dq.front() >= c) {
             dq.push_front(c);
-            // flag = !flag;
-        }
-        else {
-            dq.push_back(c);
         }
     }
     
