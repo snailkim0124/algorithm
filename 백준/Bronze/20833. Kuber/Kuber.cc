@@ -15,11 +15,7 @@ int main() {
     cin.tie(NULL); cout.tie(NULL);
 
     cin >> n;
-    ll sum = 0;
-    for (ll i = 1; i <= n; i++) {
-        sum += i * i * i;
-    }
-
+    ll sum = (n * (n + 1) / 2) * (n * (n + 1) / 2);
     cout << sum << "\n";
     
 
