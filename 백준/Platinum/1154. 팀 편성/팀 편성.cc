@@ -9,7 +9,6 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 int n;
-vector<int> adj[1005];
 int parent[1005];
 int team[1005];
 int visited[1005][1005];
@@ -41,8 +40,6 @@ int main() {
         int a, b;
         cin >> a >> b;
         if (a == -1 && b == -1) break;
-        adj[a].push_back(b);
-        adj[b].push_back(a);
         visited[a][b] = 1;
         visited[b][a] = 1;
     }
@@ -66,7 +63,6 @@ int main() {
         team[findParent(i)]++;
     }
 
-    vector<int> tmp2;
     for (int i = 1; i <= n; i++) {
         if (team[i] > 1) cnt++;
     }
