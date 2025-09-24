@@ -68,19 +68,12 @@ int main() {
 
     vector<int> tmp2;
     for (int i = 1; i <= n; i++) {
-        //cout << team[i] << " ";
         if (team[i] > 1) cnt++;
-        else if (team[i] == 1) tmp2.push_back(i);
     }
-    //cout << "\n";
 
     if (cnt > 2) {
         cout << -1 << "\n";
         exit(0);
-    }
-
-    for (int i = 1; i < tmp2.size(); i++) {
-        unionParent(tmp2[i - 1], tmp2[i]);
     }
 
     for (int i = 1; i <= n; i++) {
