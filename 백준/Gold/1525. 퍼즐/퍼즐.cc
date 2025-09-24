@@ -8,23 +8,17 @@ typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
-typedef struct PUZZLE {
-    string s;
-    int cnt;
-    int zero;
-}PUZZLE;
-
 set<string> st;
 const int dy[4] = { -1,0,1,0 };
 const int dx[4] = { 0,1,0,-1 };
 
-void bfs(string ss, int zeroidx) {
-    queue<PUZZLE> q;
+void bfs(string ss) {
+    queue<pair<string, int>> q;
     st.insert(ss);
-    q.push({ss, 0, zeroidx});
+    q.push({ ss, 0 });
 
     while (!q.empty()) {
-        auto [s, cnt, zero] = q.front();
+        auto [s, cnt] = q.front();
         q.pop();
 
         if (s == "123456780") {
@@ -32,6 +26,7 @@ void bfs(string ss, int zeroidx) {
             return;
         }
 
+        int zero = s.find('0');
         int y = zero / 3;
         int x = zero % 3;
 
@@ -45,7 +40,7 @@ void bfs(string ss, int zeroidx) {
 
             if (!st.count(s)) {
                 st.insert(s);
-                q.push({ s, cnt + 1, nzero });
+                q.push({ s, cnt + 1 });
             }
 
             swap(s[zero], s[nzero]);
@@ -61,8 +56,6 @@ int main() {
     cin.tie(NULL); cout.tie(NULL);
 
     string s;
-    int zero = -1;
-
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
             char c;
@@ -71,13 +64,7 @@ int main() {
         }
     }
 
-    for (int i = 0; i < s.size(); i++) {
-        if (s[i] == '0') {
-            zero = i;
-        }
-    }
-
-    bfs(s, zero);
+    bfs(s);
 
     return 0;
 }
