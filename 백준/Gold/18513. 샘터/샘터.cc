@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #define all(v) v.begin(), v.end()
+#include <unordered_set>
 using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
@@ -10,7 +11,7 @@ typedef tuple<ll, ll, ll> tll;
 
 int n, k;
 queue<pll> q;
-set<ll> s;
+unordered_set<ll> s;
 
 int main() {
     ios::sync_with_stdio(false);
