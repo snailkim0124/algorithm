@@ -10,38 +10,20 @@ typedef tuple<ll, ll, ll> tll;
 
 int n, m;
 char arr[1005][1005];
-int visited[1005][1005];
-int cnt = 1;
-set<int> s;
+pii parent[1005][1005];
 
-int dfs(int y, int x) {
-    if (visited[y][x]) return visited[y][x];
-
-    visited[y][x] = cnt;
-
-    if (arr[y][x] == 'N') {
-        return visited[y][x] = dfs(y - 1, x);
-    }
-    else if (arr[y][x] == 'W') {
-        return visited[y][x] = dfs(y, x - 1);
-    }
-    else if (arr[y][x] == 'E') {
-        return visited[y][x] = dfs(y, x + 1);
-    }
-    else if (arr[y][x] == 'S') {
-        return visited[y][x] = dfs(y + 1, x);
-    }
+pii findParent(pii a) {
+    if (a == parent[a.first][a.second]) return a;
+    else return parent[a.first][a.second] = findParent(parent[a.first][a.second]);
 }
 
-void printarr() {
-    cout << "=============================\n";
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cout << visited[i][j] << " ";
-        }
-        cout << "\n";
+void unionParent(pii a, pii b) {
+    a = findParent(a);
+    b = findParent(b);
+
+    if (a != b) {
+        parent[b.first][b.second] = a;
     }
-    cout << "=============================\n";
 }
 
 int main() {
@@ -57,22 +39,27 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            if (!visited[i][j]) {
-                dfs(i, j);
+            parent[i][j] = { i, j };
+        }
+    }
+
+    int cnt = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            pii tmp;
+            if (arr[i][j] == 'N') tmp = findParent({ i - 1,j });
+            else if (arr[i][j] == 'W') tmp = findParent({ i, j - 1 });
+            else if (arr[i][j] == 'E') tmp = findParent({ i, j + 1 });
+            else if (arr[i][j] == 'S') tmp = findParent({ i + 1, j });
+
+            if (tmp != make_pair(i, j)) {
+                unionParent(tmp, { i, j });
                 cnt++;
             }
         }
     }
 
-    // printarr();
-
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            s.insert(visited[i][j]);
-        }
-    }
-
-    cout << s.size() << "\n";
+    cout << n * m - cnt << "\n";
 
     return 0;
 }
