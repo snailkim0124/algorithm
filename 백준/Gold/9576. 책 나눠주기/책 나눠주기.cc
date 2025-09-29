@@ -9,21 +9,8 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 int n, m;
-int visited[1005], matched[1005];
-vector<int> adj[1005];
-
-bool dfs(int now) {
-    for (auto next : adj[now]) {
-        if (visited[next]) continue;
-        visited[next] = 1;
-
-        if (matched[next] == -1 || dfs(matched[next])) {
-            matched[next] = now;
-            return true;
-        }
-    }
-    return false;
-}
+vector<pii> v;
+int visited[1005];
 
 int main() {
     ios::sync_with_stdio(false);
@@ -32,27 +19,33 @@ int main() {
     int t;
     cin >> t;
     while (t--) {
+        memset(visited, 0, sizeof(visited));
+        v.clear();
+        priority_queue<pii, vector<pii>, greater<pii>> pq;
+
         cin >> n >> m;
-        for (int i = 1; i <= m; i++) {
+        for (int i = 0; i < m; i++) {
             int a, b;
             cin >> a >> b;
-            for (int j = a; j <= b; j++) {
-                adj[i].push_back(j);
-            }
+            pq.push({ b, a });
         }
 
         int cnt = 0;
-        memset(matched, -1, sizeof(matched));
-        for (int i = 1; i <= m; i++) {
-            memset(visited, 0, sizeof(visited));
-            if (dfs(i)) cnt++;
+        while (!pq.empty()) {
+            auto [b, a] = pq.top();
+            pq.pop();
+
+            for (int i = a; i <= b; i++) {
+                if (!visited[i]) {
+                    visited[i] = 1;
+                    cnt++;
+                    break;
+                }
+            }
         }
 
         cout << cnt << "\n";
-
-        for (int i = 1; i <= m; i++) {
-            adj[i].clear();
-        }
+        
     }
 
 
