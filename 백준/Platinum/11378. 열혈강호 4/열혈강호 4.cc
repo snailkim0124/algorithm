@@ -84,7 +84,7 @@ int main() {
 	for (int i = 1; i <= n; i++) {
 		capacity[0][i] = k;
 		adj[0].push_back(i);
-		adj[i].push_back(i);
+		adj[i].push_back(0);
 	}
 
 	// 직원 -> 업무
