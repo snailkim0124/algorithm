@@ -16,39 +16,26 @@ int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
-	ans = "", tmp = "";
 	cin >> n >> k;
 	if ((n / 2) * (n - (n / 2)) < k) {
 		cout << -1 << "\n";
 		exit(0);
 	}
 
-	for (int i = 0; i < n - (n / 2); i++) {
-		ans += "A";
-	}
-
-	for (int i = n - (n / 2); i < n; i++) {
+	int cnt = n - (n / 2);
+	for (int i = n / 2; i > 0; i--) {
+		for (int j = 0; j < k / i; j++) {
+			ans += "A";
+			cnt--;
+		}
+		k %= i;
 		ans += "B";
 	}
 
-	int cnt = (n / 2) * (n - (n / 2));
-	cnt -= k;
-
-	// cout << "cnt : " << cnt << "\n";
-
-	int origin = n - (n / 2) - 1;
-	int idx = origin;
-	int last = n;
-
-	while (cnt--) {
-		if (idx + 1 >= last) {
-			idx = --origin;
-			last--;
-		}
-		swap(ans[idx], ans[idx + 1]);
-		idx++;
-		// cout << "ans : " << ans << "\n";
+	for (int i = 0; i < cnt; i++) {
+		ans += "A";
 	}
+
 
 	cout << ans << "\n";
 
