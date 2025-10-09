@@ -17,23 +17,15 @@ int main() {
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> n >> m;
-	for (int i = 0; i < n - 1; i++) {
-		adj[i].push_back(i + 1);
+	
+	int k = n - m + 2;
+
+	for (int i = 0; i < k - 1; i++) {
+		cout << i << " " << i + 1 << "\n";
 	}
 
-	m -= 2;
-	int node = n - 1;
-
-	while (m--) {
-		adj[node - 1].clear(); // 마지막 노드 제거
-		adj[1].push_back(node);
-		node--;
-	}
-
-	for (int i = 0; i < n - 1; i++) {
-		for (auto next : adj[i]) {
-			cout << i << " " << next << "\n";
-		}
+	for (int i = k; i < n; i++) {
+		cout << 1 << " " << i << "\n";
 	}
 	
 
