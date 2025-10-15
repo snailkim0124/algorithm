@@ -23,7 +23,7 @@ int main() {
 			cin >> arr[i][j];
 			if (arr[i][j] == '1') {
 				dp[i][j][0] = dp[i][j][1] = 1;
-				mx = 1;
+				mx = 1; // 최대 1가능
 			}
 		}
 	}
@@ -31,7 +31,7 @@ int main() {
 	for (int i = 0; i < r; i++) {
 		for (int j = 0; j < c; j++) {
 			if (arr[i][j] == '0') {
-				dp[i][j][0] = dp[i][j][1] = 0;
+				dp[i][j][0] = dp[i][j][1] = 0; // 불가능
 			}
 			else {
 				if (i + 1 < r && j - 1 >= 0) dp[i + 1][j - 1][0] = dp[i][j][0] + 1;
@@ -56,17 +56,6 @@ int main() {
 			}
 		}
 	}
-
-	//cout << "============================\n";
-	//for (int i = 0; i < r; i++) {
-	//	for (int j = 0; j < c; j++) {
-	//		cout << dp[i][j][0] << " : " <<  dp[i][j][1] << "\t";
-	//		// cout << min(dp[i][j][0], dp[i][j][1]) << " ";
-	//	}
-	//	cout << "\n";
-	//}
-	//cout << "============================\n";
-
 
 	cout << mx << "\n";
 
