@@ -14,313 +14,21 @@ typedef struct MARBLE {
 
 int n, m;
 char arr[15][15];
+int visited[15][15][15][15];
 MARBLE marble;
+const int dy[4] = { -1,1,0,0 }; // 상하좌우
+const int dx[4] = { 0,0,-1,1 };
 
-void printarr() {
-	cout << "===========================\n";
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			cout << arr[i][j] << " ";
-		}
-		cout << "\n";
-	}
-	cout << "===========================\n";
-}
-
-MARBLE moving(int dir, MARBLE now) {
-	auto [ry, rx, by, bx, cnt] = now;
-
-	if (dir == 0) { // 상
-		if (ry > by) { // 빨간구슬이 더 아래
-			// 파란구슬 먼저
-			while (1) {
-				int nby = by - 1;
-				int nbx = bx;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nry = ry - 1;
-				int nrx = rx;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-		}
-		else { // 파란구슬이 더 아래
-			// 빨간구슬 먼저
-			while (1) {
-				int nry = ry - 1;
-				int nrx = rx;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nby = by - 1;
-				int nbx = bx;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-		}
-	}
-	else if (dir == 1) { // 하
-		if (ry > by) { // 빨간구슬이 더 아래
-			// 빨간구슬 먼저
-
-			while (1) {
-				int nry = ry + 1;
-				int nrx = rx;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nby = by + 1;
-				int nbx = bx;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-
-		}
-		else { // 파란구슬이 더 아래
-			// 파란구슬 먼저
-			while (1) {
-				int nby = by + 1;
-				int nbx = bx;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nry = ry + 1;
-				int nrx = rx;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-		}
-	}
-	else if (dir == 2) { // 좌
-		if (rx < bx) { // 빨간구슬이 왼쪽에 있음
-			// 빨간구슬 먼저
-			while (1) {
-				int nry = ry;
-				int nrx = rx - 1;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nby = by;
-				int nbx = bx - 1;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-		}
-		else {
-			// 파란구슬 먼저
-			while (1) {
-				int nby = by;
-				int nbx = bx - 1;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nry = ry;
-				int nrx = rx - 1;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-		}
-	}
-	else if (dir == 3) { // 우
-		if (rx < bx) { // 빨간구슬이 왼쪽에 있음
-			// 파란구슬 먼저
-			while (1) {
-				int nby = by;
-				int nbx = bx + 1;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nry = ry;
-				int nrx = rx + 1;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-		}
-		else {
-			// 빨간구슬 먼저
-			while (1) {
-				int nry = ry;
-				int nrx = rx + 1;
-
-				if (arr[nry][nrx] == '.' && !(nry == by && nrx == bx)) {
-					ry = nry;
-					rx = nrx;
-				}
-				else if (arr[nry][nrx] == 'O') {
-					ry = nry;
-					rx = nrx;
-					break;
-				}
-				else break;
-			}
-
-			while (1) {
-				int nby = by;
-				int nbx = bx + 1;
-
-				if (arr[nby][nbx] == '.' && !(nby == ry && nbx == rx)) {
-					by = nby;
-					bx = nbx;
-				}
-				else if (arr[nby][nbx] == 'O') {
-					by = nby;
-					bx = nbx;
-					break;
-				}
-				else break;
-			}
-		}
+pii moving(int y, int x, int dir) {
+	while (1) {
+		int ny = y + dy[dir];
+		int nx = x + dx[dir];
+		if (arr[ny][nx] == '#') break;
+		y = ny; x = nx;
+		if (arr[ny][nx] == 'O') break;
 	}
 
-	//if (arr[ry][rx] != 'O') {
-	//	arr[ry][rx] = 'R';
-	//}
-	//if (arr[by][bx] != 'O') {
-	//	arr[by][bx] = 'B';
-	//}
-
-	return { ry, rx, by, bx, cnt + 1 };
+	return { y, x };
 }
 
 int main() {
@@ -346,35 +54,67 @@ int main() {
 
 	marble.cnt = 0;
 
-	//moving(3, marble);
-	//printarr();
-
 	queue<MARBLE> q;
 	q.push(marble);
+	visited[marble.ry][marble.rx][marble.by][marble.bx] = 1;
+
 	while (!q.empty()) {
-		MARBLE now = q.front();
+		auto [ry, rx, by, bx, cnt] = q.front();
 		q.pop();
 
-		if (now.cnt > 10) {
-			break;
-		}
-
-		// 빨간 구슬 들어간 경우
-		if (arr[now.ry][now.rx] == 'O') {
-			cout << now.cnt << "\n";
-			exit(0);
-		}
+		if (cnt >= 10) continue;
 
 		for (int i = 0; i < 4; i++) {
-			MARBLE nm = moving(i, now);
-			// 파란구슬이 먼저 들어간 경우
-			if (arr[nm.by][nm.bx] == 'O') continue;
-			q.push(nm);
+			int nry = ry, nrx = rx, nby = by, nbx = bx;
+
+			bool flag = false;
+			if (i == 0 && ry < by) flag = true;
+			else if (i == 1 && ry > by) flag = true;
+			else if (i == 2 && rx < bx) flag = true;
+			else if (i == 3 && rx > bx) flag = true;
+
+			// 빨간구슬 먼저
+			if (flag) {
+				tie(nry, nrx) = moving(ry, rx, i);
+				tie(nby, nbx) = moving(by, bx, i);
+			}
+			else {
+				tie(nby, nbx) = moving(by, bx, i);
+				tie(nry, nrx) = moving(ry, rx, i);
+
+			}
+
+			// 파란 구슬 빠짐
+			if (arr[nby][nbx] == 'O') continue;
+
+			// 빨간 구슬 빠짐
+			if (arr[nry][nrx] == 'O') {
+				cout << cnt + 1 << "\n";
+				exit(0);
+			}
+
+			// 같은 칸일때 뒤로 한칸
+			if (nry == nby && nrx == nbx) {
+				int rd = abs(nry - ry) + abs(nrx - rx);
+				int bd = abs(nby - by) + abs(nbx - bx);
+				if (rd > bd) {
+					nry -= dy[i];
+					nrx -= dx[i];
+				}
+				else {
+					nby -= dy[i];
+					nbx -= dx[i];
+				}
+			}
+
+			if (!visited[nry][nrx][nby][nbx]) {
+				visited[nry][nrx][nby][nbx] = 1;
+				q.push({ nry, nrx, nby, nbx, cnt + 1 });
+			}
 		}
 	}
 
 	cout << -1 << "\n";
-
-
+	
 	return 0;
 }
