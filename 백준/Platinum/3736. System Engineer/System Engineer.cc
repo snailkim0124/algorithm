@@ -8,22 +8,53 @@ typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
+const int INF = 987654321;
+int n;
 vector<int> adj[20005];
-int visited[20005], matched[20005];
+int dist[20005], matchL[20005], matchR[20005];
 
+bool bfs() {
+	queue<int> q;
+	for (int now = 0; now < n; now++) {
+		if (matchL[now] == -1) {
+			dist[now] = 0;
+			q.push(now);
+		}
+		else dist[now] = INF;
+	}
 
-bool dfs(int now) {
-	for (auto next : adj[now]) {
-		if (visited[next]) continue;
-		visited[next] = 1;
+	dist[20004] = INF;
 
-		if (matched[next] == -1 || dfs(matched[next])) {
-			matched[next] = now;
-			return true;
+	while (!q.empty()) {
+		int now = q.front();
+		q.pop();
+		for (auto next : adj[now]) {
+			if (matchR[next] == -1) {
+				dist[20004] = dist[now] + 1;
+			}
+			else if (dist[matchR[next]] == INF) {
+				dist[matchR[next]] = dist[now] + 1;
+				q.push(matchR[next]);
+			}
 		}
 	}
 
-	return false;
+	return dist[20004] != INF;
+}
+
+bool dfs(int now) {
+	if (now != -1) {
+		for (auto next : adj[now]) {
+			if (matchR[next] == -1 || (dist[matchR[next]] == dist[now] + 1 && dfs(matchR[next]))) {
+				matchL[now] = next;
+				matchR[next] = now;
+				return true;
+			}
+		}
+		dist[now] = INF;
+		return false;
+	}
+	return true;
 }
 
 void scans(int i, string s) {
@@ -44,7 +75,7 @@ void scans(int i, string s) {
 			tmp += rev_s[idx];
 			idx++;
 		}
-		
+
 		if (flag) {
 			reverse(all(tmp));
 			v.push_back(stoi(tmp));
@@ -54,18 +85,14 @@ void scans(int i, string s) {
 
 
 	for (auto it : v) {
-		//cout << it << " ";
 		adj[i].push_back(it);
 	}
-	//cout << "\n";
-
 }
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
-	int n;
 	while (cin >> n) {
 		cin.ignore();
 
@@ -75,11 +102,16 @@ int main() {
 			scans(i, s);
 		}
 
-		memset(matched, -1, sizeof(matched));
+		memset(matchR, -1, sizeof(matchR));
+		memset(matchL, -1, sizeof(matchL));
+
 		int cnt = 0;
-		for (int i = 0; i < n; i++) {
-			memset(visited, 0, sizeof(visited));
-			if (dfs(i)) cnt++;
+		while (bfs()) {
+			for (int now = 0; now < n; now++) {
+				if (matchL[now] == -1 && dfs(now)) {
+					cnt++;
+				}
+			}
 		}
 
 		cout << cnt << "\n";
@@ -88,6 +120,6 @@ int main() {
 			adj[i].clear();
 		}
 	}
-	
+
 	return 0;
 }
