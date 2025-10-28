@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include <regex>
 #define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
@@ -27,16 +26,44 @@ bool dfs(int now) {
 	return false;
 }
 
-void scans(string s) {
-	int num;
-	
+void scans(int i, string s) {
+	vector<int> v;
+
+	string rev_s = s;
+	reverse(all(rev_s));
+
+	int idx = 0;
+	while (1) {
+		if (rev_s[idx] == ')') break;
+
+		bool flag = false;
+		string tmp = "";
+
+		while (isdigit(rev_s[idx])) {
+			flag = true;
+			tmp += rev_s[idx];
+			idx++;
+		}
+		
+		if (flag) {
+			reverse(all(tmp));
+			v.push_back(stoi(tmp));
+		}
+		else idx++;
+	}
+
+
+	for (auto it : v) {
+		//cout << it << " ";
+		adj[i].push_back(it);
+	}
+	//cout << "\n";
+
 }
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
-
-	regex re(R"(^\s*(\d+)\s*:\s*\(\s*(\d+)\s*\)\s*((\d+\s*)+)$)");
 
 	int n;
 	while (cin >> n) {
@@ -45,25 +72,7 @@ int main() {
 		for (int i = 0; i < n; i++) {
 			string s;
 			getline(cin, s);
-			smatch match;
-			vector<int> v;
-
-			if (regex_match(s, match, re)) {
-				int job = stoi(match[1].str());
-				int nr = stoi(match[2].str());
-				stringstream ss(match[3].str());
-
-				int x;
-				while (ss >> x) {
-					v.push_back(x);
-				}
-
-			}
-
-			for (auto it : v) {
-				adj[i].push_back(it);
-			}
-
+			scans(i, s);
 		}
 
 		memset(matched, -1, sizeof(matched));
