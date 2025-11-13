@@ -11,7 +11,7 @@ typedef tuple<ll, ll, ll> tll;
 int t;
 int n;
 int visited[1005];
-int arr[2][1005];
+int arr[1005];
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -24,8 +24,7 @@ int main() {
 
 		cin >> n;
 		for (int i = 1; i <= n; i++) {
-			cin >> arr[1][i];
-			arr[0][i] = i;
+			cin >> arr[i];
 		}
 
 		int cnt = 0;
@@ -33,7 +32,7 @@ int main() {
 			if (!visited[i]) {
 				cnt++; // 방문 안했을 때 카운트
 
-				for (int j = i; !visited[j]; j = arr[1][j]) {
+				for (int j = i; !visited[j]; j = arr[j]) {
 					visited[j] = 1; // 방문 처리
 				}
 			}
@@ -42,6 +41,6 @@ int main() {
 		cout << cnt << "\n";
 	}
 
-	
+
 	return 0;
 }
