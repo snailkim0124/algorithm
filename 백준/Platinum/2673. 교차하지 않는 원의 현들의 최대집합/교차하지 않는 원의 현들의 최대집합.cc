@@ -9,39 +9,8 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 int n;
-vector<pii> v;
-int visited[55];
-int ans;
-
-bool check(pii a, pii b) {
-	auto [a1, a2] = a;
-	auto [b1, b2] = b;
-
-	return ((a1 < b1 && b1 < a2 && a2 < b2) || (b1 < a1 && a1 < b2 && b2 < a2));
-}
-
-void dfs(int idx, vector<int> line) {
-	if (idx == n) {
-		ans = max(ans, (int)line.size());
-		return;
-	}
-
-	bool flag = true;
-	for (auto it : line) {
-		if (check(v[idx], v[it])) {
-			flag = false;
-			break;
-		}
-	}
-
-	if (flag) {
-		line.push_back(idx);
-		dfs(idx + 1, line);
-		line.pop_back();
-	}
-
-	dfs(idx + 1, line);
-}
+int pos[105];
+int dp[105][105];
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -51,12 +20,24 @@ int main() {
 	for (int i = 0; i < n; i++) {
 		int a, b;
 		cin >> a >> b;
-		if (a > b) swap(a, b);
-		v.push_back({ a, b });
+		pos[a] = b;
+		pos[b] = a;
 	}
 
-	dfs(0, {});
+	for (int sz = 1; sz <= 100; sz++) {
+		for (int l = 1; l + sz - 1 <= 100; l++) {
+			int r = l + sz - 1;
+
+			dp[l][r] = dp[l][r - 1];
+
+			int k = pos[r];
+			if (l <= k && k < r) {
+				dp[l][r] = max(dp[l][r], dp[l][k - 1] + dp[k + 1][r - 1] + 1);
+			}
+		}
+	}
+
+	cout << dp[1][100] << "\n";
 	
-	cout << ans << "\n";
 	return 0;
 }
