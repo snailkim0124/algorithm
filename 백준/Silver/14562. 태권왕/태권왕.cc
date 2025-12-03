@@ -21,10 +21,7 @@ int main() {
 
 
 		queue<tii> q;
-		set<pii> ss;
-
 		q.push({ s, t, 0 });
-		ss.insert({ s, t });
 
 		while (!q.empty()) {
 			auto [s, t, cnt] = q.front();
@@ -37,15 +34,8 @@ int main() {
 				break;
 			}
 
-			if (!ss.count({ s * 2, t + 3 })) {
-				ss.insert({ s * 2, t + 3 });
-				q.push({ s * 2 , t + 3, cnt + 1 });
-			}
-
-			if (!ss.count({ s + 1, t })) {
-				ss.insert({ s + 1, t });
-				q.push({ s + 1, t, cnt + 1 });
-			}
+			q.push({ s * 2 , t + 3, cnt + 1 });
+			q.push({ s + 1, t, cnt + 1 });
 		}
 	}
 	
