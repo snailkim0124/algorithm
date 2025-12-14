@@ -21,8 +21,10 @@ ll divide_pow(ll k, ll x, ll mod) {
 
 bool miller(ll n) {
 	if (n < 2) return false;
-	if (n == 2 || n == 3) return true;
-	if (n % 2 == 0 || n % 3 == 0) return false;
+
+	for (ll p : {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37}) {
+		if (n % p == 0) return n == p;
+	}
 
 	ll d = n - 1, s = 0;
 	while ((d & 1) == 0) {
@@ -31,7 +33,7 @@ bool miller(ll n) {
 	}
 
 	// 확률적으로 접근
-	for (ll a : {2, 3, 5, 7, 11}) {
+	for (ll a : {2, 325, 9375, 28178, 450775, 9780504, 1795265022}) {
 		if (a % n == 0) continue;
 		ll x = divide_pow(a, d, n);
 
