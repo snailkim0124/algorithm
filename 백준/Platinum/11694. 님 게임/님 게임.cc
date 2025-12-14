@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
+
+int n;
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
+
+	cin >> n;
+
+	int x = 0;
+	bool flag = true;
+
+	for (int i = 0; i < n; i++) {
+		int num;
+		cin >> num;
+		x ^= num;
+
+		if (num != 1) flag = false;
+	}
+
+	if (flag) {
+		cout << ((n % 2) ? "cubelover" : "koosaga") << "\n";
+	}
+	else {
+		cout << (x ? "koosaga" : "cubelover") << "\n";
+	}
+	
+	return 0;
+}
