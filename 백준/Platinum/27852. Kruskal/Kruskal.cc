@@ -87,7 +87,7 @@ void solve() {
 
 		x ^= ((it - tmp) % (k + 1));
 	}
-	
+
 	if (x == 0) cout << "NO\n";
 	else cout << "YES\n";
 }
@@ -101,6 +101,6 @@ int main() {
 	while (tt--) {
 		solve();
 	}
-	
+
 	return 0;
 }
