@@ -17,24 +17,28 @@ void solve() {
 		cin >> a[i];
 	}
 
-	ll sum = 0;
-	ll mx = 0;
+	while (k > 0) {
+		ll sum = 0;
+		for (int i = 0; i < n; i++) {
+			sum += a[i];
+		}
 
-	for (int i = 0; i < n; i++) {
-		sum += a[i];
-		mx = max(mx, a[i]);
+		// 합이 홀수면 이김(처음에 1씩 가져가기)
+		if (sum % 2 == 1) {
+			cout << 1;
+			return;
+		}
+
+		// 짝수면 모두 2씩 나눈 상태와 같음
+		k >>= 1;
+		for (int i = 0; i < n; i++) {
+			a[i] >>= 1;
+		}
+
+		if (sum == 0) break;
 	}
 
-	// cout << "sum : " << sum << "\n";
-	// 총합이 최대값의 반보다 커야됨?
-	if (mx > sum - mx || (sum % 2 == 0)) {
-		// cout << "ans : " << 1 << "\n";
-		cout << 0;
-	}
-	else {
-		// cout << "ans : " << 0 << "\n";
-		cout << 1;
-	}
+	cout << 0;
 }
 
 int main() {
