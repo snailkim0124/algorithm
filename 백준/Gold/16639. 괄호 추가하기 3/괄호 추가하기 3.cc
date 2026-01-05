@@ -33,31 +33,32 @@ int main() {
 		else op.push_back(s[i]);
 	}
 	
-	int sz = num.size();
+	int nn = num.size();
 
 	fill(&min_dp[0][0], &min_dp[0][0] + 25 * 25, INT_MAX);
 	fill(&max_dp[0][0], &max_dp[0][0] + 25 * 25, INT_MIN);
 
-	for (int i = 0; i < sz; i++) {
+	for (int i = 0; i < nn; i++) {
 		min_dp[i][i] = max_dp[i][i] = num[i];
 	}
 
 	// 파일 합치기?
-	for (int i = 0; i < sz; i++) {
-		for (int j = 0; i + j < sz; j++) {
-			for (int k = j; k < i + j; k++) {
-				int tmp1 = calc(max_dp[j][k], op[k], max_dp[k + 1][i + j]);
-				int tmp2 = calc(max_dp[j][k], op[k], min_dp[k + 1][i + j]);
-				int tmp3 = calc(min_dp[j][k], op[k], max_dp[k + 1][i + j]);
-				int tmp4 = calc(min_dp[j][k], op[k], min_dp[k + 1][i + j]);
+	for (int sz = 1; sz < nn; sz++) {
+		for (int l = 0; l + sz < nn; l++) {
+			int r = l + sz;
+			for (int k = l; k < r; k++) {
+				int tmp1 = calc(max_dp[l][k], op[k], max_dp[k + 1][r]);
+				int tmp2 = calc(max_dp[l][k], op[k], min_dp[k + 1][r]);
+				int tmp3 = calc(min_dp[l][k], op[k], max_dp[k + 1][r]);
+				int tmp4 = calc(min_dp[l][k], op[k], min_dp[k + 1][r]);
 
-				max_dp[j][i + j] = max({ max_dp[j][i + j], tmp1, tmp2, tmp3, tmp4 });
-				min_dp[j][i + j] = min({ min_dp[j][i + j], tmp1, tmp2, tmp3, tmp4 });
+				max_dp[l][r] = max({ max_dp[l][r], tmp1, tmp2, tmp3, tmp4 });
+				min_dp[l][r] = min({ min_dp[l][r], tmp1, tmp2, tmp3, tmp4 });
 			}
 		}
 	}
 
-	cout << max_dp[0][sz - 1] << "\n";
+	cout << max_dp[0][nn - 1] << "\n";
 
 	
 	return 0;
