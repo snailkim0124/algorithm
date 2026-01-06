@@ -52,19 +52,16 @@ int main() {
 
 	int mx = 0;
 	for (int i = 1; i < n; i++) {
-		// cout << i << " : " << z[i] << "\n";
 		if (i + z[i] == n) {
-			//cout << n % i << "\n";
 			int tmp = 0;
 			if (n % i != 0) tmp = i - (n % i);// 필요한 부분
 
 			if (tmp <= k) {
 				mx = max(mx, i);
-				// cout << i << "\n";
 			}
 		}
 	}
-	
+
 	cout << mx << "\n";
 
 
