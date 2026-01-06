@@ -43,19 +43,13 @@ int main() {
 	reverse(all(s));
 
 	vector<int> z = z_func(s);
-
-	//for (int i = 0; i < z.size(); i++) {
-	//	cout << z[i] << " ";
-	//}
-	//cout << "\n";
+	z[0] = s.size(); // 끝부분은 항상 자기자신임
 
 	while (m--) {
 		int n;
 		cin >> n;
 
-		// cout << "ans : ";
-		if (n == s.size()) cout << n << "\n";
-		else cout << z[z.size() - n] << "\n";
+		cout << z[z.size() - n] << "\n";
 	}
 
 	return 0;
