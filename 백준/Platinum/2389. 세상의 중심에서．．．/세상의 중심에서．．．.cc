@@ -30,7 +30,7 @@ double dist(Point& a, Point& b) {
 }
 
 bool isInside(Circle c, Point p) {
-    return dist(c.center, p) <= c.r * c.r;
+    return dist(c.center, p) <= c.r * c.r + 1e-9;
 }
 
 // 두 점을 이용한 원
@@ -39,68 +39,24 @@ Circle circle2_func(Point a, Point b) {
     return { center, sqrt(dist(a, b)) / 2.0 };
 }
 
-// 가우스 소거법
-vector<double> gauss(vector<vector<double>> a) {
-    int n = a.size();
-
-    for (int i = 0; i < n; i++) {
-        // pivot 찾기 (절댓값 중 가장 큰 것)
-        int pivot = i;
-        for (int k = i + 1; k < n; k++) {
-            if (fabs(a[k][i]) > fabs(a[pivot][i])) {
-                pivot = k;
-            }
-        }
-
-        // pivot행 swap
-        swap(a[i], a[pivot]);
-
-        // pivot을 1로 만들기
-        double div = a[i][i];
-        for (int j = i; j <= n; j++) {
-            a[i][j] /= div;
-        }
-
-        // pivot 아래 행을 0으로
-        for (int k = i + 1; k < n; k++) {
-            double factor = a[k][i];
-            for (int j = i; j <= n; j++) {
-                a[k][j] -= factor * a[i][j];
-            }
-        }
-    }
-
-    // 역대입
-    vector<double> ans(n);
-    for (int i = n - 1; i >= 0; i--) {
-        ans[i] = a[i][n];
-        for (int j = i + 1; j < n; j++) {
-            ans[i] -= a[i][j] * ans[j];
-        }
-    }
-
-    return ans;
-}
-
 // 세 점을 이용한 원
 Circle circle3_func(Point a, Point b, Point c) {
     auto [x1, y1] = a;
     auto [x2, y2] = b;
     auto [x3, y3] = c;
 
-    // 가우스 소거법 이용
-    vector<vector<double>> matrix(2, vector<double>(3));
-    matrix[0][0] = 2 * (x2 - x1);
-    matrix[0][1] = 2 * (y2 - y1);
-    matrix[0][2] = (x2 * x2 + y2 * y2) - (x1 * x1 + y1 * y1);
+    // 크래머 공식
+    double a1 = 2 * (x2 - x1);
+    double b1 = 2 * (y2 - y1);
+    double c1 = (x2 * x2 + y2 * y2) - (x1 * x1 + y1 * y1);
 
-    matrix[1][0] = 2 * (x3 - x1);
-    matrix[1][1] = 2 * (y3 - y1);
-    matrix[1][2] = (x3 * x3 + y3 * y3) - (x1 * x1 + y1 * y1);
+    double a2 = 2 * (x3 - x1);
+    double b2 = 2 * (y3 - y1);
+    double c2 = (x3 * x3 + y3 * y3) - (x1 * x1 + y1 * y1);
 
-    vector<double> ans = gauss(matrix);
-
-    Point center = { ans[0], ans[1] };
+    // 행렬식
+    double det = a1 * b2 - a2 * b1;
+    Point center = { (c1 * b2 - c2 * b1) / det, (a1 * c2 - a2 * c1) / det };
 
     return { center, sqrt(dist(center, a)) };
 }
