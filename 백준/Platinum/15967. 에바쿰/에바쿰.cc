@@ -9,7 +9,7 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 vector<ll> a;
-vector<ll> tree;
+vector<ll> tree, lazy;
 
 ll init(int node, int s, int e) {
     if (s == e) return tree[node] = a[s];
@@ -19,12 +19,25 @@ ll init(int node, int s, int e) {
     }
 }
 
+// 느리게 갱신되는 세그트리
+void propagate(int node, int s, int e) {
+    if (lazy[node] != 0) {
+        tree[node] += (e - s + 1) * lazy[node];
+        if (s != e) {
+            lazy[node * 2] += lazy[node];
+            lazy[node * 2 + 1] += lazy[node];
+        }
+        lazy[node] = 0;
+    }
+}
+
 void update(int node, int s, int e, int l, int r, ll val) {
+    propagate(node, s, e);
+
     if (l > e || r < s) return;
     if (l <= s && e <= r) {
-        for (int i = s; i <= r; i++) {
-            tree[node] += val;
-        }
+        lazy[node] += val;
+        propagate(node, s, e);
         return;
     }
 
@@ -35,7 +48,9 @@ void update(int node, int s, int e, int l, int r, ll val) {
 }
 
 ll query(int node, int s, int e, int l, int r) {
-    if (l > e || r < s) return 0;
+    propagate(node, s, e);
+
+    if (l > e || r < s) return 0; // 범위 밖
     if (l <= s && e <= r) return tree[node];
 
     int mid = (s + e) / 2;
@@ -56,6 +71,8 @@ int main() {
     int h = (int)ceil(log2(n));
     int tree_size = (1 << (h + 1));
     tree.resize(tree_size);
+    lazy.resize(tree_size);
+
     init(1, 1, n);
 
     ll q = q1 + q2;
