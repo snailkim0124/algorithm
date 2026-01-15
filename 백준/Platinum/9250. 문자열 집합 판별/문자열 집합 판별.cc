@@ -9,111 +9,126 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 struct Node {
-    bool end;
-    map<char, Node*> nxt;
-	Node* fail;
-    Node() : end(false) {}
+	bool end;
+	int nxt[26];
+	int fail;
+	Node() : end(false) {
+		fill(nxt, nxt + 26, 0);
+	}
 };
 
-struct ahocorasick {
-    Node* root;
-    
-	ahocorasick() {
-		root = new Node();
-		root->fail = root;
+vector<Node> trie;
+
+void insert(const string& s) {
+	int now = 0;
+
+	for (char c : s) {
+		int idx = c - 'a';
+		if (!trie[now].nxt[idx]) {
+			trie[now].nxt[idx] = trie.size();
+			trie.push_back(Node());
+		}
+		now = trie[now].nxt[idx];
+	}
+	trie[now].end = true;
+}
+
+// 실패 함수
+void failure() {
+	queue<int> q;
+
+	for (int i = 0; i < 26; i++) {
+		if (trie[0].nxt[i]) {
+			trie[trie[0].nxt[i]].fail = 0;
+			q.push(trie[0].nxt[i]);
+		}
 	}
 
-    void insert(const string& s) {
-        Node* node = root;
-        for (char c : s) {
-            if (!node->nxt[c]) {
-                node->nxt[c] = new Node();
-            }
-            node = node->nxt[c];
-        }
-        node->end = true;
-    }
+	// 트라이에 존재하는 가장 긴 접미사를 fail에 저장
+	while (!q.empty()) {
+		auto now = q.front();
+		q.pop();
 
-	// 실패 함수
-	void failure() {
-		queue<Node*> q;
+		for (int i = 0; i < 26; i++) {
+			int nxtNode = trie[now].nxt[i];
 
-		for (auto& [c, nxtNode] : root->nxt) {
-			nxtNode->fail = root;
-			q.push(nxtNode);
-		}
+			if (nxtNode) {
+				int f = trie[now].fail;
 
-		// 트라이에 존재하는 가장 긴 접미사를 fail에 저장
-		while (!q.empty()) {
-			auto now = q.front();
-			q.pop();
-
-			for (auto& [c, nxtNode] : now->nxt) {
-				Node* f = now->fail;
-				while (f != root && !f->nxt.count(c)) {
-					f = f->fail;
+				while (f != 0 && !trie[f].nxt[i]) {
+					f = trie[f].fail;
 				}
 
-				if (f->nxt.count(c)) {
-					nxtNode->fail = f->nxt[c];
-				}
-				else {
-					nxtNode->fail = root;
+				if (trie[f].nxt[i]) {
+					f = trie[f].nxt[i];
 				}
 
-				nxtNode->end |= nxtNode->fail->end;
+				trie[nxtNode].fail = f;
+
+				if (trie[f].end) {
+					trie[nxtNode].end = true;
+				}
 
 				q.push(nxtNode);
 			}
 		}
+
+
 	}
+}
 
-	bool check(const string& p) {
-		Node* node = root;
-		for (char c : p) {
-			while (node != root && !node->nxt.count(c)) {
-				node = node->fail;
-			}
+bool check(const string& p) {
+	int now = 0;
 
-			if (node->nxt.count(c)) {
-				node = node->nxt[c];
-			}
+	for (char c : p) {
+		int idx = c - 'a';
+		
 
-			if (node->end) return true;
+		while (now != 0 && !trie[now].nxt[idx]) {
+			now = trie[now].fail;
 		}
 
-		return false;
-	}
-};
+		if (trie[now].nxt[idx]) {
+			now = trie[now].nxt[idx];
+		}
 
-int n, q;
+		if (trie[now].end) return true;
+	}
+
+	return false;
+}
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
-	ahocorasick T;
+	trie.clear();
+	trie.push_back(Node()); // 루트 노드 생성
 
+	int n;
 	cin >> n;
 	for (int i = 0; i < n; i++) {
 		string s;
 		cin >> s;
-		T.insert(s);
+		insert(s);
 	}
 
-	T.failure();
+	failure();
 
+	int q;
 	cin >> q;
 	while (q--) {
 		string p;
 		cin >> p;
 
-		if (T.check(p)) cout << "YES\n";
+		if (check(p)) {
+			cout << "YES\n";
+		}
 		else cout << "NO\n";
-		
+
 	}
 
-	
+
 
 	return 0;
 }
