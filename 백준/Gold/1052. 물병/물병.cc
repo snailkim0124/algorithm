@@ -14,8 +14,13 @@ int main() {
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> n >> k;
-	for (int i = n; ; i++) {
+
+	int lsb = n & (-n);
+
+	for (int i = n; ; i += lsb) {
 		int mask = 0;
+
+		lsb = i & (-i); // 최하위 비트씩 더하기
 
 		// 켜진 비트 세기
 		int ti = i;
@@ -27,6 +32,7 @@ int main() {
 			cout << i - n << "\n";
 			break;
 		}
+		
 	}
 
 	return 0;
