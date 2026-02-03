@@ -8,18 +8,18 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 int n, m;
-vector<ll> mtree, ztree;
-vector<ll> mv, zv;
+vector<ll> tree;
+vector<ll> v;
 
-ll init(vector<ll> &tree, vector<ll> &v, int node, int s, int e) {
+ll init(int node, int s, int e) {
 	if (s == e) return tree[node] = v[s];
 	else {
 		int mid = (s + e) / 2;
-		return tree[node] = init(tree, v, node * 2, s, mid) + init(tree, v, node * 2 + 1, mid + 1, e);
+		return tree[node] = init(node * 2, s, mid) * init(node * 2 + 1, mid + 1, e);
 	}
 }
 
-void update(vector<ll>& tree, int node, int s, int e, int idx, ll val) {
+void update(int node, int s, int e, int idx, ll val) {
 	if (idx < s || idx > e) return;
 	if (s == e) {
 		tree[node] = val;
@@ -27,38 +27,35 @@ void update(vector<ll>& tree, int node, int s, int e, int idx, ll val) {
 	}
 
 	int mid = (s + e) / 2;
-	update(tree, node * 2, s, mid, idx, val);
-	update(tree, node * 2 + 1, mid + 1, e, idx, val);
-	tree[node] = tree[node * 2] + tree[node * 2 + 1];
+	update(node * 2, s, mid, idx, val);
+	update(node * 2 + 1, mid + 1, e, idx, val);
+	tree[node] = tree[node * 2] * tree[node * 2 + 1];
 }
 
-ll query(vector<ll>& tree, int node, int s, int e, int l, int r) {
-	if (l > e || r < s) return 0; // 범위 밖
+ll query(int node, int s, int e, int l, int r) {
+	if (l > e || r < s) return 1; // 범위 밖
 	if (l <= s && e <= r) return tree[node];
 
 	int mid = (s + e) / 2;
-	return query(tree, node * 2, s, mid, l, r) + query(tree, node * 2 + 1, mid + 1, e, l, r);
+	return query(node * 2, s, mid, l, r) * query(node * 2 + 1, mid + 1, e, l, r);
 }
 
 void solve() {
 	int h = (int)ceil(log2(n));
 	int tree_size = (1 << (h + 1));
-	mtree.assign(tree_size, 0);
-	ztree.assign(tree_size, 0);
+	tree.assign(tree_size, 0);
 
-	mv.assign(n + 1, 0);
-	zv.assign(n + 1, 0);
+	v.assign(n + 1, 0);
 
-	// 음수의 개수 세기, 0 개수 세기
 	for (int i = 1; i <= n; i++) {
 		int num;
 		cin >> num;
-		if (num < 0) mv[i] = 1;
-		else if (num == 0) zv[i] = 1;
+		if (num < 0) v[i] = -1;
+		else if (num == 0) v[i] = 0;
+		else v[i] = 1;
 	}
 
-	init(mtree, mv, 1, 1, n);
-	init(ztree, zv, 1, 1, n);
+	init(1, 1, n);
 	vector<char> ans;
 
 	while (m--) {
@@ -67,38 +64,19 @@ void solve() {
 		if (cmd == 'C') {
 			int i, val;
 			cin >> i >> val;
-			if (val < 0) {
-				mv[i] = 1;
-				update(mtree, 1, 1, n, i, 1);
-			}
-			else {
-				mv[i] = 0;
-				update(mtree, 1, 1, n, i, 0);
-			}
+			if (val > 0) v[i] = 1;
+			else if (val == 0) v[i] = 0;
+			else v[i] = -1;
 
-			if (val == 0) {
-				zv[i] = 1;
-				update(ztree, 1, 1, n, i, 1);
-			}
-			else {
-				zv[i] = 0;
-				update(ztree, 1, 1, n, i, 0);
-			}
+			update(1, 1, n, i, v[i]);
 		}
 		else if (cmd == 'P') {
 			int i, j;
 			cin >> i >> j;
-
-			int resz = query(ztree, 1, 1, n, i, j);
-
-			if (resz > 0) {
-				ans.push_back('0');
-			}
-			else {
-				int resm = query(mtree, 1, 1, n, i, j);
-				if (resm % 2 == 0) ans.push_back('+');
-				else ans.push_back('-');
-			}
+			int res = query(1, 1, n, i, j);
+			if (res > 0) ans.push_back('+');
+			else if (res == 0) ans.push_back('0');
+			else ans.push_back('-');
 		}
 	}
 
