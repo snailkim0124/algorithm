@@ -9,21 +9,7 @@ typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
 int n;
-int arr[505][505];
-vector<int> adj[505];
-int visited[505];
-int cnt = 0;
-
-void dfs(int now) {
-	visited[now] = 1;
-	cnt++;
-
-	for (auto next : adj[now]) {
-		if (!visited[next]) {
-			dfs(next);
-		}
-	}
-}
+int deg[505];
 
 int main() {
 	ios::sync_with_stdio(false);
@@ -33,29 +19,19 @@ int main() {
 	for (int i = 0; i < n - 1; i++) {
 		int u, v;
 		cin >> u >> v;
-		arr[u][v] = 1;
-		arr[v][u] = 1;
+		deg[u]++;
+		deg[v]++;
 	}
 
 	for (int i = 1; i <= n; i++) {
-		for (int j = i + 1; j <= n; j++) {
-			if (!arr[i][j] && !arr[j][i]) {
-				adj[i].push_back(j);
-				adj[j].push_back(i);
-			}
+		if (deg[i] == n - 1) {
+			cout << n - 1 << "\n";
+			exit(0);
 		}
 	}
+
+	cout << n << "\n";
 	
-	int mx = 0;
-	for (int i = 1; i <= n; i++) {
-		memset(visited, 0, sizeof(visited));
-		cnt = 0;
-
-		dfs(i);
-		mx = max(mx, cnt);
-	}
-
-	cout << mx << "\n";
 	
 	return 0;
 }
