@@ -10,16 +10,11 @@ typedef tuple<ll, ll, ll> tll;
 
 ll n;
 vector<pii> adj[500005];
-map<ll, ll> mp;
+vector<ll> dp;
 ll cnt;
 
 void dfs(int now, int prev, int val) {
-	if (mp.count(val)) {
-		cnt += mp[val];
-	}
-
-	mp[val]++;
-
+	dp.push_back(val);
 	for (auto [next, w] : adj[now]) {
 		if (next != prev) {
 			dfs(next, now, val ^ w);
@@ -42,6 +37,19 @@ int main() {
 
 	dfs(1, 0, 0);
 	
+	sort(all(dp));
+	
+	ll tmp = 1;
+	for (int i = 1; i < dp.size(); i++) {
+		if (dp[i] == dp[i - 1]) tmp++;
+		else {
+			cnt += tmp * (tmp - 1) / 2;
+			tmp = 1;
+		}
+	}
+
+	cnt += tmp * (tmp - 1) / 2;
+
 	cout << cnt << "\n";
 	
 	return 0;
