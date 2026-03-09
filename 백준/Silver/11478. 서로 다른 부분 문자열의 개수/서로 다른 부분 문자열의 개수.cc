@@ -1,24 +1,29 @@
-#include <iostream>
-#include <cmath>
-#include <vector>
-#include <set>
-
+#include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
 using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
+
+string s;
 set<string> st;
-string s, word;
 
 int main() {
-	ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> s;
 
 	for (int i = 0; i < s.size(); i++) {
-		string tmp = "";
 		for (int j = i; j < s.size(); j++) {
-			tmp += s[j];
-			st.insert(tmp);
+			st.insert(s.substr(i, j - i + 1));
 		}
 	}
-	cout << st.size();
+
+	cout << st.size() << "\n";
+	
+	return 0;
 }
