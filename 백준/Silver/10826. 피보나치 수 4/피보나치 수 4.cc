@@ -1,22 +1,18 @@
-#include <iostream>
-#include <utility>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <cmath>
-#include <map>
-#include <set>
-#include <string>
-
+#include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
-int n;
-int sum;
 string dp[10005];
-vector<int> ans, num1, num2;
 
 string sum_function(string s1, string s2) {
+	int sum = 0;
+	vector<int> ans, num1, num2;
 	string s, tmp;
 
 	if (s1.size() < s2.size()) {
@@ -64,18 +60,17 @@ string sum_function(string s1, string s2) {
 
 
 int main() {
-	ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
+	int n;
 	cin >> n;
-	dp[0] = '0';
-	dp[1] = '1';
+	dp[0] = "0";
+	dp[1] = "1";
 
 	for (int i = 2; i <= n; i++) {
 		dp[i] = sum_function(dp[i - 1], dp[i - 2]);
 	}
-
-	cout << dp[n];
-	
+	cout << dp[n] << "\n";
 	return 0;
 }
