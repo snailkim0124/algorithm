@@ -1,20 +1,21 @@
-#include <iostream>
-#include <utility>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <cmath>
-
+#include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
 using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
 int n;
-int arr[304], dp[304];
-int res;
+int arr[305];
+int dp[305];
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
-	
+
 	cin >> n;
 	for (int i = 0; i < n; i++) {
 		cin >> arr[i];
@@ -25,9 +26,11 @@ int main() {
 	dp[2] = max(arr[0] + arr[2], arr[1] + arr[2]);
 
 	for (int i = 3; i < n; i++) {
-		dp[i] = max(arr[i] + dp[i - 2], arr[i] + arr[i - 1] + dp[i - 3]);
+		dp[i] = max({ dp[i], dp[i - 2] + arr[i], arr[i - 1] + arr[i] + dp[i - 3]});
 	}
-	res = dp[n-1];
-	cout << res;
+
+	cout << dp[n - 1] << "\n";
+
+	
 	return 0;
 }
