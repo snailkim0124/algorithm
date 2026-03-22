@@ -1,35 +1,37 @@
-#include <iostream>
-#include <utility>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <cmath>
-
+#include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
 using namespace std;
-int n, m;
-int res[10];
-int arr[10];
-int check[10];
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
-void dfs(int depth, int idx) {
+int n, m;
+int arr[10];
+int res[10];
+int visited[10];
+
+void go(int depth, int prev) {
 	if (depth == m) {
 		for (int i = 0; i < m; i++) {
 			cout << res[i] << " ";
 		}
 		cout << "\n";
+
+		return;
 	}
 
-	else {
-		for (int i = idx; i < n; i++) {
-			if (check[i] == 0) {
-				res[depth] = arr[i];
-				check[i] = 1;
-				dfs(depth + 1, i + 1);
-				check[i] = 0;
-			}
+	for (int i = 0; i < n; i++) {
+		if (!visited[i] && prev < arr[i]) {
+			visited[i] = 1;
+			res[depth] = arr[i];
+			go(depth + 1, arr[i]); // 다음 칸을 채우러 감
+
+			visited[i] = 0;
 		}
 	}
-
 }
 
 int main() {
@@ -40,7 +42,10 @@ int main() {
 	for (int i = 0; i < n; i++) {
 		cin >> arr[i];
 	}
+
 	sort(arr, arr + n);
-	dfs(0, 0);
+
+	go(0, 0);
+	
 	return 0;
 }
