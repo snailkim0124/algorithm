@@ -1,47 +1,55 @@
-#include <iostream>
-#include <utility>
-#include <vector>
-#include <algorithm>
-#include <queue>
-#include <cmath>
-#include <string>
-#include <stack>
-#include <deque>
-#include <cmath>
-#include <tuple>
-#define plus aaa
-#define minus bbb
-#define div ccc
+#include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
 using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
+typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
+
 int n;
 int arr[15];
-int MIN = 1000000001;
-int MAX = -1000000001;
-void counting(int idx, int num, int plus, int minus, int mul, int div) { // 다음 인덱스에 추가하는 방식
-	if (idx == n - 1) {
-		MIN = min(MIN, num);
-		MAX = max(MAX, num);
+int mx = INT_MIN;
+int mn = INT_MAX;
+
+void go(int idx, int plus, int minus, int multi, int div, int val) {
+	if (idx == n) {
+		mx = max(mx, val);
+		mn = min(mn, val);
 		return;
 	}
-	if (plus > 0) counting(idx + 1, num + arr[idx + 1], plus - 1, minus, mul, div); // 더하기
-	if (minus > 0) counting(idx + 1, num - arr[idx + 1], plus, minus-1, mul, div); // 빼기
-	if (mul > 0) counting(idx + 1, num * arr[idx + 1], plus, minus, mul-1, div); // 곱하기
-	if (div > 0) counting(idx + 1, num / arr[idx + 1], plus, minus, mul, div-1); // 나누기
+
+	if (plus > 0) {
+		go(idx + 1, plus - 1, minus, multi, div, val + arr[idx]);
+	}
+	if (minus > 0) {
+		go(idx + 1, plus, minus - 1, multi, div, val - arr[idx]);
+	}
+	if (multi > 0) {
+		go(idx + 1, plus, minus, multi - 1, div, val * arr[idx]);
+	}
+	if (div > 0) {
+		go(idx + 1, plus, minus, multi, div - 1, val / arr[idx]);
+	}
 }
 
-
 int main() {
-	ios_base::sync_with_stdio(false);
+	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
 	cin >> n;
 	for (int i = 0; i < n; i++) {
 		cin >> arr[i];
 	}
-	int plus, minus, mul, div;
-	cin >> plus >> minus >> mul >> div;
-	counting(0, arr[0], plus, minus, mul, div);
-	cout << MAX << "\n" << MIN;
+
+	int plus, minus, multi, div;
+	cin >> plus >> minus >> multi >> div;
+
+	go(1, plus, minus, multi, div, arr[0]);
 	
+	cout << mx << "\n";
+	cout << mn << "\n";
+
 	return 0;
 }
