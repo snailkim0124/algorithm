@@ -1,15 +1,21 @@
 #include <bits/stdc++.h>
+#define all(v) v.begin(), v.end()
 using namespace std;
 typedef long long ll;
 typedef unsigned long long ull;
 typedef pair<int, int> pii;
+typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
+typedef tuple<ll, ll, ll> tll;
 
 int n, m;
 int arr[10];
 int res[10];
+int visited[10];
 
-void go(int depth, int idx) {
+void go(int depth, int prev) {
+	int last = 0;
+
 	if (depth == m) {
 		for (int i = 0; i < m; i++) {
 			cout << res[i] << " ";
@@ -18,12 +24,10 @@ void go(int depth, int idx) {
 		return;
 	}
 
-	int tmp = 0;
-	for (int i = idx; i < n; i++) {
-		if (tmp != arr[i]) {
-			tmp = arr[i];
-			res[depth] = arr[i];
-			go(depth + 1, i);
+	for (int i = 0; i < n; i++) {
+		if (last != arr[i] && prev <= arr[i]) {
+			last = res[depth] = arr[i];
+			go(depth + 1, arr[i]); // 다음 칸을 채우러 감
 		}
 	}
 }
@@ -38,6 +42,7 @@ int main() {
 	}
 
 	sort(arr, arr + n);
+
 	go(0, 0);
 	
 	return 0;
