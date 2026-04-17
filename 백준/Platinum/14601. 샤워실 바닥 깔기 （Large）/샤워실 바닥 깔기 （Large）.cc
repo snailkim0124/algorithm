@@ -8,71 +8,50 @@ typedef tuple<int, int, int> tii;
 typedef pair<ll, ll> pll;
 typedef tuple<ll, ll, ll> tll;
 
-int k;
+int n;
 vector<vector<int>> board;
 int num = 1;
 
-void go(int y, int x, int hy, int hx, int sz) {
+bool check(int y, int x, int sz) {
+	// 채워진 부분이 있는지 체크
+	for (int i = y; i < y + sz; i++) {
+		for (int j = x; j < x + sz; j++) {
+			if (board[i][j] != 0) return true;
+		}
+	}
+	return false;
+}
+
+void go(int y, int x, int sz) {
 	if (sz == 1) return;
 
 	int nnum = num++;
+	int m = sz / 2;
+	if (!check(y, x, m)) board[y + m - 1][x + m - 1] = nnum;
+	if (!check(y + m, x, m)) board[y + m][x + m - 1] = nnum;
+	if (!check(y, x + m, m)) board[y + m - 1][x + m] = nnum;
+	if (!check(y + m, x + m, m)) board[y + m][x + m] = nnum;
 
-	// 2사분면
-	if (hy < y + sz / 2 && hx < x + sz / 2) {
-		// 채워진 부분이 있는 경우
-		go(y, x, hy, hx, sz / 2);
-	}
-	else {
-		// 없는 경우 => 대각선에 구멍 새로 만들기
-		board[y + sz / 2 - 1][x + sz / 2 - 1] = nnum;
-		go(y, x, y + sz / 2 - 1, x + sz / 2 - 1, sz / 2);
-	}
-
-	// 1사분면
-	if (hy < y + sz / 2 && hx >= x + sz / 2) {
-		go(y, x + sz / 2, hy, hx, sz / 2);
-	}
-	else {
-		board[y + sz / 2 - 1][x + sz / 2] = nnum;
-		go(y, x + sz / 2, y + sz / 2 - 1, x + sz / 2, sz / 2);
-	}
-
-	// 3사분면
-	if (hy >= y + sz / 2 && hx < x + sz / 2) {
-		go(y + sz / 2, x, hy, hx, sz / 2);
-	}
-	else {
-		board[y + sz / 2][x + sz / 2 - 1] = nnum;
-		go(y + sz / 2, x, y + sz / 2, x + sz / 2 - 1, sz / 2);
-	}
-
-	// 4사분면
-	if (hy >= y + sz / 2 && hx >= x + sz / 2) {
-		go(y + sz / 2, x + sz / 2, hy, hx, sz / 2);
-	}
-	else {
-		board[y + sz / 2][x + sz / 2] = nnum;
-		go(y + sz / 2, x + sz / 2, y + sz / 2, x + sz / 2, sz / 2);
-	}
+	go(y, x, m); // 2사분면
+	go(y, x + m, m); // 1사분면
+	go(y + m, x, m); // 3사분면
+	go(y + m, x + m, m); // 4사분면
 }
 
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 
-	int hy, hx;
-	cin >> k;
-	cin >> hx >> hy;
-
+	int k, hy, hx;
+	cin >> k >> hx >> hy;
 	int n = (1 << k);
 	board.resize(n, vector<int>(n, 0));
 
 	hy = n - hy;
 	hx--;
-
 	board[hy][hx] = -1;
 
-	go(0, 0, hy, hx, n);
+	go(0, 0, n);
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
